@@ -51,6 +51,8 @@ COPY --chown=node:node --from=build /app/build ./build
 
 RUN mkdir -p logs && chown node:node logs
 
+RUN ls -l /app/build #debugging: list build directory contents.
+
 EXPOSE 3000
 
 USER node
