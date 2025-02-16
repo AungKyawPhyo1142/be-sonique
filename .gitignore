@@ -1,0 +1,12 @@
+# Production Build Directory
+/build
+
+# Modules
+/node_modules
+
+# Env
+.env
+
+# Logs
+/logs
+*.log
