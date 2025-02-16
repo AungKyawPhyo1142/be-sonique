@@ -1,0 +1,1 @@
+{"root":["./src/env.ts","./src/index.ts","./src/logger.ts","./src/constants/error-codes.ts","./src/controllers/example.ts","./src/middlewares/json-response.ts","./src/middlewares/network-log.ts","./src/routes/example.ts","./src/routes/gateway.ts","./src/services/example.ts","./src/types/express.d.ts","./src/utils/errors.ts"],"version":"5.7.3"}

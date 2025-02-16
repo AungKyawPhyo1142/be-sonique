@@ -1,0 +1,25 @@
+# ENV
+.env*
+
+# Version Control
+.git/
+.github/
+.gitignore
+
+# Docker
+dockerfile*
+
+# Build
+build/
+
+# Docs
+README.md
+docs/
+
+# Etc.
+node_modules/
+.vscode/
+logs/
+test/
+Makefile
+cloudbuild.yaml

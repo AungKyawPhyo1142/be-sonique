@@ -21,7 +21,7 @@ const errorsFileTransport: DailyRotateFile = new DailyRotateFile({
 
 const logsFileTransport: DailyRotateFile = new DailyRotateFile({
   datePattern: 'DD-MM-YYYY',
-  filename: 'logs/appliation-%DATE%.log',
+  filename: 'logs/application-%DATE%.log',
   format: format.uncolorize(),
   maxFiles: '14d',
 });
