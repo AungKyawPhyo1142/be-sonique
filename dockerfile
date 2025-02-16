@@ -16,8 +16,6 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-RUN pnpx prisma generate
-
 RUN pnpm build
 
 RUN chown -R node:node /app
@@ -33,9 +31,9 @@ HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
 # Build Stage
 FROM base AS build
 
-COPY --chown=node:node --from=development /app/node_modules ./node_modules
+RUN npm install -g pnpm 
 
-RUN pnpx prisma generate
+COPY --chown=node:node --from=development /app/node_modules ./node_modules
 
 RUN pnpm build
 
@@ -51,6 +49,7 @@ FROM base AS production
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/build ./build
 
+RUN mkdir -p logs && chown node:node logs
 
 EXPOSE 3000
 
