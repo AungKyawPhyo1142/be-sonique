@@ -18,6 +18,8 @@ RUN pnpm install
 
 RUN pnpm build
 
+RUN ls -l /app/build # Debugging: List build directory contents after development build
+
 RUN chown -R node:node /app
 
 EXPOSE 3000
@@ -31,11 +33,13 @@ HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
 # Build Stage
 FROM base AS build
 
-RUN npm install -g pnpm 
+RUN npm install -g pnpm
 
 COPY --chown=node:node --from=development /app/node_modules ./node_modules
 
 RUN pnpm build
+
+RUN ls -l /app/build # Debugging: List build directory contents after build stage
 
 ENV NODE_ENV=production
 
@@ -51,7 +55,7 @@ COPY --chown=node:node --from=build /app/build ./build
 
 RUN mkdir -p logs && chown node:node logs
 
-RUN ls -l /app/build #debugging: list build directory contents.
+RUN ls -l /app/build # Debugging: List build directory contents after copy
 
 EXPOSE 3000
 
