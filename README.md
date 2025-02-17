@@ -39,7 +39,7 @@ Before you begin, ensure you have the following installed on your machine:
    pnpm dev
    ```
 
-## Contributers
+## Contributors
 
   
 
