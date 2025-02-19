@@ -1,7 +1,7 @@
 import * as userService from '@/services/auth/user';
 import { ValidationError } from '@/utils/errors';
 import { NextFunction, Request, Response } from 'express';
-import { ZodError, object, string } from 'zod';
+import { ZodError, boolean, object, string } from 'zod';
 
 // schema is basically what the request body should look like
 const registerUserSchema = object({
@@ -11,6 +11,21 @@ const registerUserSchema = object({
   password: string().min(8),
   username: string().min(4).max(20),
 });
+
+const loginSchema = object({
+  email: string().email(),
+  password: string().min(8),
+  rememberMe: boolean().default(true),
+});
+
+const auth = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const response = userService.auth(req.user);
+    return res.status(200).json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
 
 const registerUser = async (
   req: Request,
@@ -40,7 +55,7 @@ const registerUser = async (
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password, rememberMe } = req.body;
+    const { email, password, rememberMe } = loginSchema.parse(req.body);
 
     const { refershToken, token, userInfo } = await userService.loginUser(
       email,
@@ -70,4 +85,4 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, auth };

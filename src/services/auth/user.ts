@@ -13,6 +13,20 @@ type UserInfo = {
   userId: number;
 };
 
+const auth = (user: Express.Request['user']) => {
+  if (!user) {
+    throw new AuthenticationError('Not authenticated');
+  }
+  const userInfo: UserInfo = {
+    createdAt: user.created_at,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    userId: user.id,
+  };
+  return userInfo;
+};
+
 const registerUser = async (
   email: string,
   firstName: string,
@@ -95,4 +109,4 @@ const loginUser = async (
   }
 };
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, auth };
