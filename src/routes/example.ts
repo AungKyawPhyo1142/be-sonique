@@ -1,6 +1,6 @@
 // REST API ROUTES, keep them clean & short :)
+import * as exampleController from '@/controllers/example';
 import { Router } from 'express';
-import * as exampleController from '@/controllers/example'
 
 const router = Router();
 
