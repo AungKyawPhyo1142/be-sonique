@@ -1,7 +1,17 @@
+import { ENV } from '@/env';
 import prisma from '@/libs/prisma';
 import logger from '@/logger';
-import { ConflictError } from '@/utils/errors';
+import { AuthenticationError, ConflictError } from '@/utils/errors';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+type UserInfo = {
+  createdAt: Date;
+  email: string;
+  firstName: string;
+  lastName: string;
+  userId: number;
+};
 
 const registerUser = async (
   email: string,
@@ -37,4 +47,52 @@ const registerUser = async (
   }
 };
 
-export { registerUser };
+const loginUser = async (
+  email: string,
+  password: string,
+  rememberMe: boolean,
+) => {
+  try {
+    const result = await prisma.user.findUnique({ where: { email } });
+    if (!result) {
+      throw new AuthenticationError('Invalid email or password');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, result.password);
+    if (!passwordMatch) {
+      throw new AuthenticationError('Password does not match');
+    }
+
+    const refershToken = rememberMe
+      ? jwt.sign(
+          {
+            userId: result.id,
+          },
+          ENV.REFRESH_TOKEN_SECRET,
+          { expiresIn: '30d' },
+        )
+      : undefined;
+
+    const token = jwt.sign(
+      {
+        userId: result.id,
+      },
+      ENV.JWT_SECRET,
+      { expiresIn: '1d' },
+    );
+
+    const userInfo: UserInfo = {
+      createdAt: result.created_at,
+      email: result.email,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      userId: result.id,
+    };
+    return { refershToken, token, userInfo };
+  } catch (error) {
+    logger.error('Error login user', error);
+    throw error;
+  }
+};
+
+export { registerUser, loginUser };

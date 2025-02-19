@@ -38,4 +38,36 @@ const registerUser = async (
   }
 };
 
-export { registerUser };
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password, rememberMe } = req.body;
+
+    const { refershToken, token, userInfo } = await userService.loginUser(
+      email,
+      password,
+      rememberMe,
+    );
+    if (refershToken) {
+      res.cookie('refreshToken', refershToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+    }
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+
+    return res.status(200).json(userInfo);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+export { registerUser, loginUser };
