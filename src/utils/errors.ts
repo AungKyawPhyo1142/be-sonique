@@ -69,40 +69,52 @@ export class UnauthorizedError extends AppError {
 }
 
 export class ValidationError extends AppError {
-    constructor(issue?: ZodIssue[]) {
-      const error = ErrorCodes.VALIDATION_ERROR;
-      super(
-        error.message,
-        error.statusCode,
-        error.code,
-        error.userMessage,
-        true,
-        issue,
-      );
-    }
+  constructor(issue?: ZodIssue[]) {
+    const error = ErrorCodes.VALIDATION_ERROR;
+    super(
+      error.message,
+      error.statusCode,
+      error.code,
+      error.userMessage,
+      true,
+      issue,
+    );
   }
-  
-  export class InternalServerError extends AppError {
-    constructor(details?: string) {
-      const error = ErrorCodes.INTERNAL_SERVER_ERROR;
-      super(
-        details || error.message,
-        error.statusCode,
-        error.code,
-        error.userMessage,
-        false, // Non-operational error
-      );
-    }
-  }
+}
 
-  export class NotFoundError extends AppError {
-    constructor(details?: string) {
-      const error = ErrorCodes.NOT_FOUND;
-      super(
-        details || error.message,
-        error.statusCode,
-        error.code,
-        error.userMessage,
-      );
-    }
+export class InternalServerError extends AppError {
+  constructor(details?: string) {
+    const error = ErrorCodes.INTERNAL_SERVER_ERROR;
+    super(
+      details || error.message,
+      error.statusCode,
+      error.code,
+      error.userMessage,
+      false, // Non-operational error
+    );
   }
+}
+
+export class NotFoundError extends AppError {
+  constructor(details?: string) {
+    const error = ErrorCodes.NOT_FOUND;
+    super(
+      details || error.message,
+      error.statusCode,
+      error.code,
+      error.userMessage,
+    );
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(details?: string) {
+    const error = ErrorCodes.CONFLICT;
+    super(
+      details || error.message,
+      error.statusCode,
+      error.code,
+      details || error.userMessage,
+    );
+  }
+}

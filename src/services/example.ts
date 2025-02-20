@@ -5,7 +5,7 @@ const sum = (a: number, b: number): number => {
 };
 
 const getRandom = (): number => {
-    return Math.floor(Math.random() * 100);
-}
+  return Math.floor(Math.random() * 100);
+};
 
 export { sum, getRandom };
