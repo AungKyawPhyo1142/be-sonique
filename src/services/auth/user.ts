@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 type UserInfo = {
+  username: string;
   createdAt: Date;
   email: string;
   firstName: string;
@@ -23,6 +24,7 @@ const auth = (user: Express.Request['user']) => {
     firstName: user.firstName,
     lastName: user.lastName,
     userId: user.id,
+    username: user.username,
   };
   return userInfo;
 };
@@ -101,6 +103,7 @@ const loginUser = async (
       firstName: result.firstName,
       lastName: result.lastName,
       userId: result.id,
+      username: result.username,
     };
     return { refershToken, token, userInfo };
   } catch (error) {
