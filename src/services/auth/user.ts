@@ -69,7 +69,9 @@ const loginUser = async (
   rememberMe: boolean,
 ) => {
   try {
-    const result = await prisma.user.findUnique({ where: { email } });
+    const result = await prisma.user.findUnique({
+      where: { deleted_at: null, email },
+    });
     if (!result) {
       throw new AuthenticationError('Invalid email or password');
     }

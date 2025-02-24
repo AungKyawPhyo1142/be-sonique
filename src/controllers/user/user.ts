@@ -9,11 +9,20 @@ const getUserDetails = async (
   try {
     const { id } = req.params;
     const userDetails = await userService.getUserDetails(id);
-
     return res.status(200).json(userDetails);
   } catch (error) {
     return next(error);
   }
 };
 
-export { getUserDetails };
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const userDetails = await userService.deleteUser(id);
+    return res.status(200).json(userDetails);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export { getUserDetails, deleteUser };

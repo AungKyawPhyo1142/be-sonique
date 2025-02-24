@@ -18,7 +18,7 @@ const getUserDetails = async (id: string) => {
         profile_image: true,
         username: true,
       },
-      where: { id: +id },
+      where: { deleted_at: null, id: +id },
     });
     if (!result) {
       throw new BadRequestError('User not found');
@@ -30,4 +30,25 @@ const getUserDetails = async (id: string) => {
   }
 };
 
-export { getUserDetails };
+const deleteUser = async (id: string) => {
+  if (!id || id.length === 0 || id === '') {
+    throw new BadRequestError('Invalid user id');
+  }
+  try {
+    const res = await prisma.user.update({
+      data: {
+        deleted_at: new Date(),
+      },
+      where: { id: +id },
+    });
+    return {
+      id: res.id,
+      message: 'User deleted successfully',
+    };
+  } catch (error) {
+    logger.error('Error deleting user: ', error);
+    throw error;
+  }
+};
+
+export { getUserDetails, deleteUser };
