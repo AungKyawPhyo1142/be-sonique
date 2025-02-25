@@ -1,6 +1,8 @@
+import supabase from '@/config/supabase';
 import prisma from '@/libs/prisma';
 import logger from '@/logger';
-import { BadRequestError } from '@/utils/errors';
+import { BadRequestError, InternalServerError } from '@/utils/errors';
+import { readFileSync, unlinkSync } from 'fs';
 
 const getUserDetails = async (id: string) => {
   if (!id || id.length === 0 || id === '') {
@@ -57,7 +59,7 @@ const updateUser = async (
   firstName?: string,
   lastName?: string,
   bio?: string,
-  profileImage?: string,
+  profileImage?: Express.Multer.File,
   email?: string,
 ) => {
   if (!id || id.length === 0 || id === '') {
@@ -71,13 +73,44 @@ const updateUser = async (
       throw new BadRequestError('User not found');
     }
 
+    let profileImageURL = existingUser.profile_image;
+
+    if (profileImage) {
+      const imageBuffer = readFileSync(profileImage.path);
+      const fileName = `${id}-${profileImage.originalname}-${Date.now()}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('users')
+        .upload(`profile-images/${fileName}`, imageBuffer, {
+          cacheControl: '3600',
+          contentType: profileImage.mimetype,
+          upsert: true,
+        });
+
+      if (uploadError) {
+        logger.error('Profile iamge upload error: ', uploadError);
+        throw new InternalServerError(
+          `Error uploading profile image: ${uploadError.message}`,
+        );
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage
+        .from('users')
+        .getPublicUrl(`profile-images/${fileName}`);
+
+      profileImageURL = publicUrl;
+      unlinkSync(profileImage.path);
+    }
+
     const result = await prisma.user.update({
       data: {
         bio,
         email,
         firstName,
         lastName,
-        profile_image: profileImage,
+        profile_image: profileImageURL,
         username,
       },
       where: { id: +id },

@@ -1,13 +1,20 @@
 import * as userService from '@/services/user/user';
 import { NextFunction, Request, Response } from 'express';
+import multer from 'multer';
 import { ZodError, object, string } from 'zod';
+
+const profileUpload = multer({
+  dest: 'profile-upload/',
+  limits: {
+    fileSize: 30 * 1024 * 1024, // 30MB limit
+  },
+});
 
 const updateUserSchema = object({
   bio: string().optional(),
   email: string().email().optional(),
   firstName: string().optional(),
   lastName: string().optional(),
-  profileImage: string().optional(),
   username: string().optional(),
 });
 const getUserDetails = async (
@@ -37,8 +44,30 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const { bio, email, firstName, lastName, profileImage, username } =
+    const { bio, email, firstName, lastName, username } =
       updateUserSchema.parse(req.body);
+
+    let profileImage;
+    if (
+      req.files &&
+      'profile_image' in req.files &&
+      req.files.profile_image[0]
+    ) {
+      const imageFile = req.files['profile_image'][0];
+
+      // Validate image type
+      if (
+        !imageFile.mimetype.match(/^image\/.+/) &&
+        !imageFile.mimetype.includes('octet-stream')
+      ) {
+        return res.status(400).json({
+          message: `Invalid image type: ${imageFile.mimetype}`,
+        });
+      }
+
+      profileImage = imageFile;
+    }
+
     const userDetails = await userService.updateUser(
       id,
       username,
@@ -58,4 +87,4 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { getUserDetails, deleteUser, updateUser };
+export { getUserDetails, deleteUser, updateUser, profileUpload };
