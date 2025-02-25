@@ -51,4 +51,50 @@ const deleteUser = async (id: string) => {
   }
 };
 
-export { getUserDetails, deleteUser };
+const updateUser = async (
+  id: string,
+  username?: string,
+  firstName?: string,
+  lastName?: string,
+  bio?: string,
+  profileImage?: string,
+  email?: string,
+) => {
+  if (!id || id.length === 0 || id === '') {
+    throw new BadRequestError('Invalid user id');
+  }
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { deleted_at: null, id: +id },
+    });
+    if (!existingUser) {
+      throw new BadRequestError('User not found');
+    }
+
+    const result = await prisma.user.update({
+      data: {
+        bio,
+        email,
+        firstName,
+        lastName,
+        profile_image: profileImage,
+        username,
+      },
+      where: { id: +id },
+    });
+    return {
+      bio: result.bio,
+      email: result.email,
+      firstName: result.firstName,
+      id: result.id,
+      lastName: result.lastName,
+      profileImage: result.profile_image,
+      username: result.username,
+    };
+  } catch (error) {
+    logger.error('Error updating user: ', error);
+    throw error;
+  }
+};
+
+export { getUserDetails, deleteUser, updateUser };
