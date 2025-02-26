@@ -11,5 +11,15 @@ router.patch(
   userController.profileUpload.fields([{ maxCount: 1, name: 'profile_image' }]),
   userController.updateUser,
 );
+router.patch(
+  '/activate-artist/:id',
+  secureRoute(),
+  userController.activateArtist,
+);
+router.patch(
+  '/deactivate-artist/:id',
+  secureRoute(),
+  userController.deactivateArtist,
+);
 
 export default router;

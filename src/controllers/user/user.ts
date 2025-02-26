@@ -87,4 +87,39 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { getUserDetails, deleteUser, updateUser, profileUpload };
+const activateArtist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+    const userDetails = await userService.activateArtist(id);
+    return res.status(200).json(userDetails);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const deactivateArtist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+    const userDetails = await userService.deactivateArtist(id);
+    return res.status(200).json(userDetails);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export {
+  getUserDetails,
+  deleteUser,
+  updateUser,
+  profileUpload,
+  activateArtist,
+  deactivateArtist,
+};

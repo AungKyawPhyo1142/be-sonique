@@ -1,7 +1,7 @@
 import authRouter from '@/routes/auth/auth';
 import exampleRouter from '@/routes/example';
-import userRouter from '@/routes/user/user';
 import songRouter from '@/routes/songs/songs';
+import userRouter from '@/routes/user/user';
 import { Router } from 'express';
 
 const gateway = Router();

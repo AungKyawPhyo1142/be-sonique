@@ -1,7 +1,11 @@
 import supabase from '@/config/supabase';
 import prisma from '@/libs/prisma';
 import logger from '@/logger';
-import { BadRequestError, InternalServerError } from '@/utils/errors';
+import {
+  BadRequestError,
+  ConflictError,
+  InternalServerError,
+} from '@/utils/errors';
 import { readFileSync, unlinkSync } from 'fs';
 
 const getUserDetails = async (id: string) => {
@@ -16,8 +20,10 @@ const getUserDetails = async (id: string) => {
         email: true,
         firstName: true,
         id: true,
+        isArtist: true,
         lastName: true,
         profile_image: true,
+        Song: true,
         username: true,
       },
       where: { deleted_at: null, id: +id },
@@ -25,7 +31,11 @@ const getUserDetails = async (id: string) => {
     if (!result) {
       throw new BadRequestError('User not found');
     }
-    return result;
+    return {
+      ...result,
+      Song: undefined,
+      total_songs: result.Song ? result.Song.length : 0,
+    };
   } catch (error) {
     logger.error('Error getting user details: ', error);
     throw error;
@@ -130,4 +140,79 @@ const updateUser = async (
   }
 };
 
-export { getUserDetails, deleteUser, updateUser };
+const activateArtist = async (id: string) => {
+  if (!id || id.length === 0 || id === '') {
+    throw new BadRequestError('Invalid user id');
+  }
+
+  try {
+    const dbUser = await prisma.user.findUnique({
+      select: { isArtist: true },
+      where: { id: +id },
+    });
+
+    if (!dbUser) {
+      throw new BadRequestError('User not found');
+    }
+
+    if (dbUser?.isArtist) {
+      throw new ConflictError('User is already an artist');
+    }
+
+    const result = await prisma.user.update({
+      data: { isArtist: true },
+      where: { id: +id },
+    });
+
+    return {
+      id: result.id,
+      isArtist: result.isArtist,
+      message: 'User activated as artist successfully',
+    };
+  } catch (error) {
+    logger.error('Error activating artist: ', error);
+    throw error;
+  }
+};
+
+const deactivateArtist = async (id: string) => {
+  if (!id || id.length === 0 || id === '') {
+    throw new BadRequestError('Invalid user id');
+  }
+
+  try {
+    const dbUser = await prisma.user.findUnique({
+      select: { isArtist: true, Song: true },
+      where: { id: +id },
+    });
+
+    if (!dbUser) {
+      throw new BadRequestError('User not found');
+    }
+
+    if (dbUser.Song && dbUser.Song.length > 0) {
+      throw new ConflictError('User has songs, cannot deactivate artist');
+    }
+
+    const res = await prisma.user.update({
+      data: { isArtist: false },
+      where: { id: +id },
+    });
+    return {
+      id: res.id,
+      isArtist: res.isArtist,
+      message: 'User deactivated as artist successfully',
+    };
+  } catch (error) {
+    logger.error('Error deactivating artist: ', error);
+    throw error;
+  }
+};
+
+export {
+  getUserDetails,
+  deleteUser,
+  updateUser,
+  activateArtist,
+  deactivateArtist,
+};
