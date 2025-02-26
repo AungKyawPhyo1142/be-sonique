@@ -12,6 +12,8 @@ type UserInfo = {
   firstName: string;
   lastName: string;
   userId: number;
+  total_songs: number;
+  isArtist: boolean;
 };
 
 const auth = (user: Express.Request['user']) => {
@@ -22,7 +24,9 @@ const auth = (user: Express.Request['user']) => {
     createdAt: user.created_at,
     email: user.email,
     firstName: user.firstName,
+    isArtist: user.isArtist,
     lastName: user.lastName,
+    total_songs: user.Song ? user.Song.length : 0,
     userId: user.id,
     username: user.username,
   };
@@ -69,7 +73,12 @@ const loginUser = async (
   rememberMe: boolean,
 ) => {
   try {
-    const result = await prisma.user.findUnique({ where: { email } });
+    const result = await prisma.user.findUnique({
+      include: {
+        Song: true,
+      },
+      where: { deleted_at: null, email },
+    });
     if (!result) {
       throw new AuthenticationError('Invalid email or password');
     }
@@ -101,7 +110,9 @@ const loginUser = async (
       createdAt: result.created_at,
       email: result.email,
       firstName: result.firstName,
+      isArtist: result.isArtist,
       lastName: result.lastName,
+      total_songs: result.Song ? result.Song.length : 0,
       userId: result.id,
       username: result.username,
     };

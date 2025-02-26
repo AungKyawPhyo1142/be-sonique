@@ -5,7 +5,7 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/', secureRoute(),exampleController.getRandom);
+router.get('/', secureRoute(), exampleController.getRandom);
 router.get('/sum', exampleController.sumQuery);
 router.post('/sum', exampleController.sum);
 

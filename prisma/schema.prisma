@@ -19,4 +19,22 @@ model User {
     isArtist      Boolean  @default(false)
     created_at    DateTime @default(now())
     updated_at    DateTime @updatedAt
+    deleted_at    DateTime?
+    Song          Song[]
+}
+
+model Song {
+    id            String   @id @default(uuid())
+    title         String
+    fileName      String
+    fileUrl       String
+    duration      Float
+    coverImage    String?
+    coverImageUrl String?
+    genre         String
+    artistId      Int
+    create_at     DateTime @default(now())
+    updated_at    DateTime @updatedAt
+
+    User User @relation(fields: [artistId], references: [id])
 }
