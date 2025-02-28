@@ -17,13 +17,17 @@ const upload = multer({
 
 const uploadSongSchema = object({
   artistId: string(),
-  genre: string(),
+  genreId: string(),
   title: string(),
+});
+
+const createGenreSchema = object({
+  name: string(),
 });
 
 const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { artistId, genre, title } = uploadSongSchema.parse(req.body);
+    const { artistId, genreId, title } = uploadSongSchema.parse(req.body);
 
     if (
       !req.files ||
@@ -135,7 +139,7 @@ const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
       audioFileName,
       coverImageUrl.data.publicUrl,
       coverImageFileName,
-      genre,
+      genreId ? parseInt(genreId) : 0,
       title,
       audioDuration,
     );
@@ -150,4 +154,18 @@ const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { uploadSong, upload };
+const createGenre = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { name } = createGenreSchema.parse(req.body);
+    const result = await songService.createGenre(name);
+    return res.status(201).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+export { uploadSong, upload, createGenre };

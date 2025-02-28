@@ -22,8 +22,8 @@ const supabase = createClient(supabaseURL, supabaseKey, {
 // Test the connection and bucket access
 supabase.storage
   .getBucket('songs')
-  .then((response) => {
-    logger.info('Successfully connected to songs bucket:', response);
+  .then(() => {
+    logger.info('Successfully connected to songs bucket.');
   })
   .catch((error) => {
     logger.error('Failed to access songs bucket:', error);
@@ -31,8 +31,8 @@ supabase.storage
 
 supabase.storage
   .getBucket('users')
-  .then((response) => {
-    logger.info('Successfully connected to users bucket:', response);
+  .then(() => {
+    logger.info('Successfully connected to users bucket.');
   })
   .catch((error) => {
     logger.error('Failed to access users bucket:', error);

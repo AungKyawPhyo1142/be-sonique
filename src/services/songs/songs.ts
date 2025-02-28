@@ -7,7 +7,7 @@ const uploadSong = async (
   audioFileName: string,
   coverImageUrl: string,
   coverImageFileName: string,
-  genre: string,
+  genreId: number,
   title: string,
   duration: number,
 ) => {
@@ -21,7 +21,7 @@ const uploadSong = async (
         duration,
         fileName: audioFileName,
         fileUrl: audioUrl,
-        genre,
+        genreId,
         title,
       },
     });
@@ -30,21 +30,30 @@ const uploadSong = async (
       artistId: result.artistId,
       audioUrl: result.fileUrl,
       coverImageUrl: result.coverImageUrl,
-      genre: result.genre,
+      genre: result.genreId,
       title: result.title,
     };
   } catch (error) {
     logger.error('Error uploading song', error);
     throw error;
   }
-
-  return {
-    artistId,
-    audioUrl,
-    coverImageUrl,
-    genre,
-    title,
-  };
 };
 
-export { uploadSong };
+const createGenre = async (genre: string) => {
+  try {
+    const res = await prisma.songGenre.create({
+      data: {
+        name: genre,
+      },
+    });
+    return {
+      id: res.id,
+      name: res.name,
+    };
+  } catch (error) {
+    logger.error('Error creating genre', error);
+    throw error;
+  }
+};
+
+export { uploadSong, createGenre };
