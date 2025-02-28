@@ -168,4 +168,32 @@ const createGenre = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { uploadSong, upload, createGenre };
+const getAllSongs = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await songService.getAllSongs();
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getSongsByGenre = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { genreId } = req.params;
+    logger.debug('genreId: ', genreId);
+    const result = await songService.getSongsByGenre(parseInt(genreId));
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export { uploadSong, upload, createGenre, getAllSongs, getSongsByGenre };
