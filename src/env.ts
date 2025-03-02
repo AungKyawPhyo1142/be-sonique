@@ -6,6 +6,8 @@ export const ENV = {
   NODE_ENV: (process.env.NODE_ENV || 'dev') as 'local' | 'dev' | 'production',
   PORT: process.env.PORT || 3000,
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'temp-secret',
+  SUPABASE_KEY: process.env.SUPABASE_KEY || 'temp-supabase-key',
+  SUPABASE_URL: process.env.SUPABASE_URL || 'temp-supabase-url',
 };
 
 if (ENV.NODE_ENV === 'local' && !process.env.CORS_ORIGIN) {

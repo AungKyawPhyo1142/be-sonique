@@ -10,3 +10,7 @@
 # Logs
 /logs
 *.log
+
+/uploads
+/upload
+/profile-upload
