@@ -56,6 +56,16 @@ const createGenre = async (genre: string) => {
   }
 };
 
+const getAllGenres = async () => {
+  try {
+    const res = await prisma.songGenre.findMany();
+    return res;
+  } catch (error) {
+    logger.error('Error getting all genres', error);
+    throw error;
+  }
+};
+
 const getAllSongs = async () => {
   try {
     const res = await prisma.song.findMany({
@@ -94,4 +104,4 @@ const getSongsByGenre = async (genreId: number) => {
   }
 };
 
-export { uploadSong, createGenre, getAllSongs, getSongsByGenre };
+export { uploadSong, createGenre, getAllSongs, getSongsByGenre, getAllGenres };

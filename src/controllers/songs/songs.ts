@@ -168,6 +168,19 @@ const createGenre = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getAllGenres = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await songService.getAllGenres();
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const getAllSongs = async (
   _req: Request,
   res: Response,
@@ -196,4 +209,11 @@ const getSongsByGenre = async (
   }
 };
 
-export { uploadSong, upload, createGenre, getAllSongs, getSongsByGenre };
+export {
+  uploadSong,
+  upload,
+  createGenre,
+  getAllSongs,
+  getSongsByGenre,
+  getAllGenres,
+};

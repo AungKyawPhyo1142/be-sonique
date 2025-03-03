@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/all', secureRoute(), songController.getAllSongs);
 router.get('/genres/:genreId', secureRoute(), songController.getSongsByGenre);
+router.get('/genres', secureRoute(), songController.getAllGenres);
 
 router.post(
   '/upload',
