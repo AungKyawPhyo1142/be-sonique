@@ -133,4 +133,54 @@ const getSongsByGenre = async (genreId: number) => {
   }
 };
 
-export { uploadSong, createGenre, getAllSongs, getSongsByGenre, getAllGenres };
+const deleteSong = async (songId: string) => {
+  try {
+    const res = await prisma.song.delete({
+      where: {
+        id: songId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error deleting song', error);
+    throw error;
+  }
+};
+
+const getSongsByArtist = async (artistId: number) => {
+  try {
+    const res = await prisma.song.findMany({
+      select: {
+        albumId: true,
+        artistId: true,
+        coverImageUrl: true,
+        duration: true,
+        fileUrl: true,
+        Genre: {
+          select: {
+            id: true,
+          },
+        },
+        id: true,
+        title: true,
+      },
+      where: {
+        artistId: artistId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error getting songs by artist', error);
+    throw error;
+  }
+};
+
+export {
+  uploadSong,
+  createGenre,
+  getAllSongs,
+  getSongsByGenre,
+  getAllGenres,
+  deleteSong,
+  getSongsByArtist,
+};

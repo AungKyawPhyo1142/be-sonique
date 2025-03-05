@@ -208,6 +208,30 @@ const getSongsByGenre = async (
   }
 };
 
+const deleteSong = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { songId } = req.params;
+    const result = await songService.deleteSong(songId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getSongsByArtist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { artistId } = req.params;
+    const result = await songService.getSongsByArtist(parseInt(artistId));
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export {
   uploadSong,
   upload,
@@ -215,4 +239,6 @@ export {
   getAllSongs,
   getSongsByGenre,
   getAllGenres,
+  deleteSong,
+  getSongsByArtist,
 };

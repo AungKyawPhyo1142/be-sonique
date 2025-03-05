@@ -5,9 +5,10 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/all', secureRoute(), songController.getAllSongs);
+router.delete('/:songId', secureRoute(), songController.deleteSong);
 router.get('/genres/:genreId', secureRoute(), songController.getSongsByGenre);
 router.get('/genres', secureRoute(), songController.getAllGenres);
-
+router.get('/artist/:artistId', secureRoute(), songController.getSongsByArtist);
 router.post(
   '/upload',
   secureRoute(),
