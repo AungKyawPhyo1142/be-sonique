@@ -21,6 +21,21 @@ model User {
     updated_at    DateTime  @updatedAt
     deleted_at    DateTime?
     Song          Song[]
+    Album         Album[]
+}
+
+model Album {
+    id            Int       @id @default(autoincrement())
+    name          String
+    coverImage    String?
+    coverImageUrl String?
+    artistId      Int
+    songs         Song[]
+    created_at    DateTime  @default(now())
+    updated_at    DateTime  @updatedAt
+    deleted_at    DateTime?
+    User          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        Int?
 }
 
 model Song {
@@ -33,12 +48,14 @@ model Song {
     coverImageUrl String?
     genreId       Int
     artistId      Int
+    albumId       Int?
     create_at     DateTime  @default(now())
     updated_at    DateTime  @updatedAt
     deleted_at    DateTime?
 
-    User  User      @relation(fields: [artistId], references: [id])
+    User  User      @relation(fields: [artistId], references: [id], onDelete: Cascade)
     Genre SongGenre @relation(fields: [genreId], references: [id])
+    Album Album?    @relation(fields: [albumId], references: [id], onDelete: Cascade)
 }
 
 model SongGenre {
