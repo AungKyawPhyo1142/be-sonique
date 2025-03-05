@@ -83,7 +83,15 @@ const getAllSongs = async () => {
         title: true,
       },
     });
-    return res;
+    return res.map((song) => ({
+      artistId: song.artistId,
+      audioUrl: song.fileUrl,
+      coverImageUrl: song.coverImageUrl,
+      duration: song.duration,
+      genre: song.Genre.id,
+      id: song.id,
+      title: song.title,
+    }));
   } catch (error) {
     logger.error('Error getting all songs', error);
     throw error;
@@ -93,11 +101,32 @@ const getAllSongs = async () => {
 const getSongsByGenre = async (genreId: number) => {
   try {
     const res = await prisma.song.findMany({
+      select: {
+        artistId: true,
+        coverImageUrl: true,
+        duration: true,
+        fileUrl: true,
+        Genre: {
+          select: {
+            id: true,
+          },
+        },
+        id: true,
+        title: true,
+      },
       where: {
         genreId: genreId,
       },
     });
-    return res;
+    return res.map((song) => ({
+      artistId: song.artistId,
+      audioUrl: song.fileUrl,
+      coverImageUrl: song.coverImageUrl,
+      duration: song.duration,
+      genre: song.Genre.id,
+      id: song.id,
+      title: song.title,
+    }));
   } catch (error) {
     logger.error('Error getting song by genre', error);
     throw error;

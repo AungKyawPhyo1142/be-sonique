@@ -4,6 +4,8 @@ import { Router } from 'express';
 
 const router = Router();
 
+router.get('/:artistId', secureRoute(), albumController.getAlbumsByArtistId);
+
 router.post(
   '/create',
   secureRoute(),

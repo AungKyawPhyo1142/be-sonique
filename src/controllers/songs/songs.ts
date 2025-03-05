@@ -201,7 +201,6 @@ const getSongsByGenre = async (
 ) => {
   try {
     const { genreId } = req.params;
-    logger.debug('genreId: ', genreId);
     const result = await songService.getSongsByGenre(parseInt(genreId));
     return res.status(200).json(result);
   } catch (error) {

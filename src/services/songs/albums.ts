@@ -30,4 +30,26 @@ const createAlbum = async (
   }
 };
 
-export { createAlbum };
+const getAlbumsByArtistId = async (artistId: number) => {
+  try {
+    const res = await prisma.album.findMany({
+      select: {
+        artistId: true,
+        coverImageUrl: true,
+        created_at: true,
+        id: true,
+        name: true,
+        updated_at: true,
+      },
+      where: {
+        artistId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error getting albums by artist id', error);
+    throw error;
+  }
+};
+
+export { createAlbum, getAlbumsByArtistId };
