@@ -101,4 +101,20 @@ const getAlbumsByArtistId = async (
   }
 };
 
-export { createAlbum, upload, getAlbumsByArtistId };
+const getAlbumDetails = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { albumId } = req.params;
+    const response = await albumService.getAlbumDetails(
+      albumId ? parseInt(albumId) : 0,
+    );
+    return res.status(200).json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export { createAlbum, upload, getAlbumsByArtistId, getAlbumDetails };

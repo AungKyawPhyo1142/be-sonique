@@ -5,7 +5,7 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/:artistId', secureRoute(), albumController.getAlbumsByArtistId);
-
+router.get('/detail/:albumId', secureRoute(), albumController.getAlbumDetails);
 router.post(
   '/create',
   secureRoute(),

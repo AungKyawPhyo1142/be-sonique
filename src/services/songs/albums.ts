@@ -52,4 +52,37 @@ const getAlbumsByArtistId = async (artistId: number) => {
   }
 };
 
-export { createAlbum, getAlbumsByArtistId };
+const getAlbumDetails = async (albumId: number) => {
+  try {
+    const res = await prisma.album.findUnique({
+      select: {
+        artistId: true,
+        coverImageUrl: true,
+        created_at: true,
+        id: true,
+        name: true,
+        songs: {
+          select: {
+            coverImageUrl: true,
+            create_at: true,
+            duration: true,
+            fileUrl: true,
+            id: true,
+            title: true,
+            updated_at: true,
+          },
+        },
+        updated_at: true,
+      },
+      where: {
+        id: albumId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error getting album details', error);
+    throw error;
+  }
+};
+
+export { createAlbum, getAlbumsByArtistId, getAlbumDetails };
