@@ -8,33 +8,63 @@ generator client {
 }
 
 model User {
-    id            Int      @id @default(autoincrement())
-    email         String   @unique
-    username      String   @unique
+    id            Int       @id @default(autoincrement())
+    email         String    @unique
+    username      String    @unique
     firstName     String
     lastName      String
     bio           String?
     profile_image String?
     password      String
-    isArtist      Boolean  @default(false)
-    created_at    DateTime @default(now())
-    updated_at    DateTime @updatedAt
+    isArtist      Boolean   @default(false)
+    created_at    DateTime  @default(now())
+    updated_at    DateTime  @updatedAt
     deleted_at    DateTime?
     Song          Song[]
+    Album         Album[]
+}
+
+model Album {
+    id            Int       @id @default(autoincrement())
+    name          String
+    description   String?
+    coverImage    String?
+    coverImageUrl String?
+    artistId      Int
+    songs         Song[]
+    created_at    DateTime  @default(now())
+    updated_at    DateTime  @updatedAt
+    deleted_at    DateTime?
+    User          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        Int?
 }
 
 model Song {
-    id            String   @id @default(uuid())
+    id            String    @id @default(uuid())
     title         String
     fileName      String
     fileUrl       String
     duration      Float
     coverImage    String?
     coverImageUrl String?
-    genre         String
+    genreId       Int
     artistId      Int
-    create_at     DateTime @default(now())
-    updated_at    DateTime @updatedAt
+    albumId       Int?
+    create_at     DateTime  @default(now())
+    updated_at    DateTime  @updatedAt
+    deleted_at    DateTime?
 
-    User User @relation(fields: [artistId], references: [id])
+    User  User      @relation(fields: [artistId], references: [id], onDelete: Cascade)
+    Genre SongGenre @relation(fields: [genreId], references: [id])
+    Album Album?    @relation(fields: [albumId], references: [id], onDelete: Cascade)
+}
+
+model SongGenre {
+    id         Int       @id @default(autoincrement())
+    name       String    @unique
+    created_at DateTime  @default(now())
+    updated_at DateTime  @updatedAt
+    deleted_at DateTime?
+
+    Songs Song[]
 }
