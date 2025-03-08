@@ -9,7 +9,7 @@
     "prisma:prepare": "pnpx prisma@5.18.0 generate && pnpx prisma@5.18.0 migrate deploy",
     "start:dev": "nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/index.ts",
     "start": "pnpm start:prod",
-    "start:prod": "node /app/build/index.js",
+    "start:prod": "node build/index.js",
     "clean": "npm run format && npm run lint",
     "format": "prettier . --write --config ./.prettierrc && echo \"Success: format completed\"",
     "lint": "prettier --check . --config ./.prettierrc && eslint --max-warnings 0 . && echo \"Success: your code is clean\""
