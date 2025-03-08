@@ -8,7 +8,7 @@
     "dev": "pnpm install && pnpm start:dev",
     "start:dev": "nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/index.ts",
     "start": "pnpm start:prod",
-    "start:prod": "node /app/build/index.js",
+    "start:prod": "node build/index.js",
     "format": "prettier . --write --config ./.prettierrc && echo \"Success: format completed\"",
     "lint": "prettier --check . --config ./.prettierrc && eslint --max-warnings 0 . && echo \"Success: your code is clean\""
   },
