@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: node-app
+    env: node
+    buildCommand: npm install -g pnpm && pnpm install && pnpm prisma:prepare && pnpm build
+    startCommand: pnpm start
