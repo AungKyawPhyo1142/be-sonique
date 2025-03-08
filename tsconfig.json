@@ -14,7 +14,7 @@
       "@routes/*": ["./routes/*"],
       "@services/*": ["./services/*"]
     },
-    "outDir": "./dist",
+    "outDir": "./build",
     "sourceMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
