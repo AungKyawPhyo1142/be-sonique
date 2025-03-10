@@ -3,7 +3,7 @@ services:
     name: node-app
     env: node
     buildCommand: npm install -g pnpm && pnpm install && pnpm prisma:prepare && pnpm build
-    startCommand: pnpm start:prod
+    startCommand: pnpm start
     envVars:
       - key: NODE_ENV
         value: production
