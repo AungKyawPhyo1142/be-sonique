@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pnpm prisma generate && rm -rf build && tsc --build --listEmittedFiles && tsc-alias && cp -r prisma build/ && echo \"Success: build completed\"",
+    "build": "pnpm prisma:prepare && rm -rf build && tsc --build --listEmittedFiles && tsc-alias && cp -r prisma build/ && echo \"Success: build completed\"",
     "dev": "pnpm install && pnpm prisma:prepare && pnpm start:dev",
     "prisma:prepare": "pnpx prisma@5.18.0 generate && pnpx prisma@5.18.0 migrate deploy",
     "start:dev": "nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/index.ts",
