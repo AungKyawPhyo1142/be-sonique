@@ -175,6 +175,21 @@ const getSongsByArtist = async (artistId: number) => {
   }
 };
 
+const likeSong = async (songId: string, userId: number) => {
+  try {
+    const res = await prisma.likeSong.create({
+      data: {
+        songId: songId,
+        userId: userId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error liking song', error);
+    throw error;
+  }
+};
+
 export {
   uploadSong,
   createGenre,
@@ -183,4 +198,5 @@ export {
   getAllGenres,
   deleteSong,
   getSongsByArtist,
+  likeSong,
 };

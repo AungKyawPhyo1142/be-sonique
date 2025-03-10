@@ -20,5 +20,6 @@ router.post(
 );
 
 router.post('/genres', secureRoute(), songController.createGenre);
+router.post('/likes', secureRoute(), songController.likeSongs);
 
 export default router;

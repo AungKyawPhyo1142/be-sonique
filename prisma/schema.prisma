@@ -8,20 +8,22 @@ generator client {
 }
 
 model User {
-    id            Int       @id @default(autoincrement())
-    email         String    @unique
-    username      String    @unique
+    id            Int        @id @default(autoincrement())
+    email         String     @unique
+    username      String     @unique
     firstName     String
     lastName      String
     bio           String?
     profile_image String?
     password      String
-    isArtist      Boolean   @default(false)
-    created_at    DateTime  @default(now())
-    updated_at    DateTime  @updatedAt
+    isArtist      Boolean    @default(false)
+    created_at    DateTime   @default(now())
+    updated_at    DateTime   @updatedAt
     deleted_at    DateTime?
     Song          Song[]
     Album         Album[]
+    Playlist      Playlist[]
+    LikeSong      LikeSong[]
 }
 
 model Album {
@@ -54,9 +56,11 @@ model Song {
     updated_at    DateTime  @updatedAt
     deleted_at    DateTime?
 
-    User  User      @relation(fields: [artistId], references: [id], onDelete: Cascade)
-    Genre SongGenre @relation(fields: [genreId], references: [id])
-    Album Album?    @relation(fields: [albumId], references: [id], onDelete: Cascade)
+    User         User           @relation(fields: [artistId], references: [id], onDelete: Cascade)
+    Genre        SongGenre      @relation(fields: [genreId], references: [id])
+    Album        Album?         @relation(fields: [albumId], references: [id], onDelete: Cascade)
+    PlaylistSong PlaylistSong[]
+    LikeSong     LikeSong[]
 }
 
 model SongGenre {
@@ -67,4 +71,39 @@ model SongGenre {
     deleted_at DateTime?
 
     Songs Song[]
+}
+
+model Playlist {
+    id         Int       @id @default(autoincrement())
+    name       String
+    userId     Int
+    created_at DateTime  @default(now())
+    updated_at DateTime  @updatedAt
+    deleted_at DateTime?
+
+    user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    songs PlaylistSong[]
+}
+
+model PlaylistSong {
+    id         Int       @id @default(autoincrement())
+    playlistId Int
+    songId     String
+    created_at DateTime  @default(now())
+    updated_at DateTime  @updatedAt
+    deleted_at DateTime?
+    playlist   Playlist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+    song       Song      @relation(fields: [songId], references: [id])
+}
+
+model LikeSong {
+    id         Int       @id @default(autoincrement())
+    songId     String
+    userId     Int
+    created_at DateTime  @default(now())
+    updated_at DateTime  @updatedAt
+    deleted_at DateTime?
+
+    song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
