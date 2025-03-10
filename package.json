@@ -8,7 +8,7 @@
     "dev": "pnpm install && pnpm prisma:prepare && pnpm start:dev",
     "prisma:prepare": "pnpx prisma@5.18.0 generate && pnpx prisma@5.18.0 migrate deploy",
     "start:dev": "nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/index.ts",
-    "start": "NODE_ENV=production node ./build/index.js",
+    "start": "NODE_ENV=production node -r dotenv/config ./build/index.js",
     "clean": "npm run format && npm run lint",
     "format": "prettier . --write --config ./.prettierrc && echo \"Success: format completed\"",
     "lint": "prettier --check . --config ./.prettierrc && eslint --max-warnings 0 . && echo \"Success: your code is clean\""
@@ -50,6 +50,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "express-list-routes": "^1.2.2",
     "helmet": "^7.1.0",

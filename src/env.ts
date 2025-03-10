@@ -1,3 +1,9 @@
+import dotenv from 'dotenv';
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
+
 export const ENV = {
   APP: process.env.APP || 'be-sonique',
   CORS_ORIGIN: process.env.CORS_ORIGIN || true,
