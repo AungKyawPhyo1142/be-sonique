@@ -14,6 +14,12 @@ const addSongsToPlaylistSchema = object({
   userId: number(),
 });
 
+const removeSongsFromPlaylistSchema = object({
+  playlistId: number(),
+  songIds: array(string()),
+  userId: number(),
+});
+
 const createPlaylist = async (
   req: Request,
   res: Response,
@@ -85,9 +91,33 @@ const getPlaylistDetails = async (
   }
 };
 
+const removeSongsFromPlaylist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { playlistId, userId, songIds } = removeSongsFromPlaylistSchema.parse(
+      req.body,
+    );
+    const result = await songServices.removeSongsFromPlaylist(
+      playlistId,
+      songIds,
+      userId,
+    );
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    }
+    return next(error);
+  }
+};
+
 export {
   createPlaylist,
   getUserPlaylist,
   addSongsToPlaylist,
+  removeSongsFromPlaylist,
   getPlaylistDetails,
 };

@@ -114,8 +114,6 @@ const addSongsToPlaylist = async (
   }
 };
 
-
-
 const getPlaylistDetails = async (playlistId: number) => {
   try {
     const result = await prisma.playlist.findUnique({
@@ -172,9 +170,43 @@ const getPlaylistDetails = async (playlistId: number) => {
   }
 };
 
+const removeSongsFromPlaylist = async (
+  playlistId: number,
+  songIds: string[],
+  userId: number,
+) => {
+  try {
+    const existingPlaylist = await prisma.playlist.findFirst({
+      where: {
+        id: playlistId,
+        userId: userId,
+      },
+    });
+
+    if (!existingPlaylist) {
+      throw new NotFoundError('Playlist not found!');
+    }
+
+    await prisma.playlistSong.deleteMany({
+      where: {
+        playlistId,
+        songId: {
+          in: songIds,
+        },
+      },
+    });
+
+    return await getPlaylistDetails(playlistId);
+  } catch (error) {
+    logger.error('Error removing songs from playlist: ', error);
+    throw error;
+  }
+};
+
 export {
   createPlaylist,
   getUserPlaylist,
   addSongsToPlaylist,
+  removeSongsFromPlaylist,
   getPlaylistDetails,
 };

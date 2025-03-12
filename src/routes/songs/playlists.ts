@@ -12,5 +12,10 @@ router.get(
   playlistController.getPlaylistDetails,
 );
 router.patch('/add-song', secureRoute(), playlistController.addSongsToPlaylist);
+router.delete(
+  '/remove-song',
+  secureRoute(),
+  playlistController.removeSongsFromPlaylist,
+);
 
 export default router;
