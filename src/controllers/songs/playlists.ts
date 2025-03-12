@@ -1,0 +1,44 @@
+import * as songServices from '@/services/songs/playlist';
+import { ValidationError } from '@/utils/errors';
+import { NextFunction, Request, Response } from 'express';
+import { ZodError, number, object, string } from 'zod';
+
+const createPlaylistSchema = object({
+  name: string(),
+  userId: number(),
+});
+
+const createPlaylist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { name, userId } = createPlaylistSchema.parse(req.body);
+
+  try {
+    const result = await songServices.createPlaylist(userId, name);
+    return res.status(201).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+const getUserPlaylist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = req.params;
+    const response = await songServices.getUserPlaylist(+userId);
+    return res.status(200).json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export { createPlaylist, getUserPlaylist };

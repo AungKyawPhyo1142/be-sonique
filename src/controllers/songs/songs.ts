@@ -30,6 +30,10 @@ const likeSongsSchema = object({
   userId: number(),
 });
 
+const getAllUserLikedSongsSchema = object({
+  userId: number(),
+});
+
 const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { artistId, genreId, title } = uploadSongSchema.parse(req.body);
@@ -241,6 +245,24 @@ const likeSongs = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { songId, userId } = likeSongsSchema.parse(req.body);
     const result = await songService.likeSong(songId, userId);
+    return res.status(201).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+const getAllUserLikedSongs = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = getAllUserLikedSongsSchema.parse(req.body);
+    const result = await songService.getAllUserLikedSongs(userId);
     return res.status(200).json(result);
   } catch (error) {
     if (error instanceof ZodError) {
@@ -261,4 +283,5 @@ export {
   deleteSong,
   getSongsByArtist,
   likeSongs,
+  getAllUserLikedSongs,
 };
