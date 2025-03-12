@@ -56,11 +56,11 @@ model Song {
     updated_at    DateTime  @updatedAt
     deleted_at    DateTime?
 
-    User         User           @relation(fields: [artistId], references: [id], onDelete: Cascade)
-    Genre        SongGenre      @relation(fields: [genreId], references: [id])
-    Album        Album?         @relation(fields: [albumId], references: [id], onDelete: Cascade)
-    PlaylistSong PlaylistSong[]
-    LikeSong     LikeSong[]
+    User      User           @relation(fields: [artistId], references: [id], onDelete: Cascade)
+    Genre     SongGenre      @relation(fields: [genreId], references: [id])
+    Album     Album?         @relation(fields: [albumId], references: [id], onDelete: Cascade)
+    LikeSong  LikeSong[]
+    Playlists PlaylistSong[]
 }
 
 model SongGenre {
@@ -74,9 +74,10 @@ model SongGenre {
 }
 
 model Playlist {
-    id         Int       @id @default(autoincrement())
-    name       String
-    userId     Int
+    id     Int    @id @default(autoincrement())
+    name   String
+    userId Int
+
     created_at DateTime  @default(now())
     updated_at DateTime  @updatedAt
     deleted_at DateTime?
@@ -94,6 +95,8 @@ model PlaylistSong {
     deleted_at DateTime?
     playlist   Playlist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
     song       Song      @relation(fields: [songId], references: [id])
+
+    @@unique([playlistId, songId])
 }
 
 model LikeSong {

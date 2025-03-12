@@ -6,5 +6,11 @@ const router = Router();
 
 router.post('/create', secureRoute(), playlistController.createPlaylist);
 router.get('/:userId', secureRoute(), playlistController.getUserPlaylist);
+router.get(
+  '/details/:playlistId',
+  secureRoute(),
+  playlistController.getPlaylistDetails,
+);
+router.patch('/add-song', secureRoute(), playlistController.addSongsToPlaylist);
 
 export default router;
