@@ -17,5 +17,6 @@ router.delete(
   secureRoute(),
   playlistController.removeSongsFromPlaylist,
 );
+router.delete('/delete', secureRoute(), playlistController.deletePlaylist);
 
 export default router;

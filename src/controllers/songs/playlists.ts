@@ -20,6 +20,11 @@ const removeSongsFromPlaylistSchema = object({
   userId: number(),
 });
 
+const deletePlaylistSchema = object({
+  playlistId: number(),
+  userId: number(),
+});
+
 const createPlaylist = async (
   req: Request,
   res: Response,
@@ -114,10 +119,25 @@ const removeSongsFromPlaylist = async (
   }
 };
 
+const deletePlaylist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { playlistId, userId } = deletePlaylistSchema.parse(req.body);
+    const resp = await songServices.deletePlaylist(+playlistId, +userId);
+    return res.status(204).json(resp);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export {
   createPlaylist,
   getUserPlaylist,
   addSongsToPlaylist,
   removeSongsFromPlaylist,
   getPlaylistDetails,
+  deletePlaylist,
 };

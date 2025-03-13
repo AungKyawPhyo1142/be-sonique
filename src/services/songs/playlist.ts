@@ -203,10 +203,40 @@ const removeSongsFromPlaylist = async (
   }
 };
 
+const deletePlaylist = async (playlistId: number, userId: number) => {
+  try {
+    const existingPlaylist = await prisma.playlist.findFirst({
+      where: {
+        id: playlistId,
+        userId: userId,
+      },
+    });
+
+    if (!existingPlaylist) {
+      throw new NotFoundError('Playlist not found!');
+    }
+
+    await prisma.playlist.delete({
+      where: {
+        id: playlistId,
+        userId: userId,
+      },
+    });
+
+    return {
+      message: 'Playlist deleted successfully',
+    };
+  } catch (error) {
+    logger.error('Error deleting playlist: ', error);
+    throw error;
+  }
+};
+
 export {
   createPlaylist,
   getUserPlaylist,
   addSongsToPlaylist,
   removeSongsFromPlaylist,
   getPlaylistDetails,
+  deletePlaylist,
 };
