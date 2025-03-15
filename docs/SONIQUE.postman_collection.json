@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"aung@mail.com\",\n    \"firstName\": \"Aung\",\n    \"lastName\": \"Phyo\",\n    \"password\": \"Password@123\",\n    \"username\": \"aung001\"\n}",
+							"raw": "{\n    \"email\": \"aungdev001@mail.com\",\n    \"firstName\": \"Aung\",\n    \"lastName\": \"Phyo\",\n    \"password\": \"Password@123\",\n    \"username\": \"aung001\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -98,233 +98,6 @@
 		{
 			"name": "Songs",
 			"item": [
-				{
-					"name": "Genre",
-					"item": [
-						{
-							"name": "create a genre",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Pop\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}/songs/genres",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"songs",
-										"genres"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get all genres",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{HOST}}/songs/genres",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"songs",
-										"genres"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get songs by genre",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{HOST}}/songs/genres/1",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"songs",
-										"genres",
-										"1"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Albums",
-					"item": [
-						{
-							"name": "create empty album",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "artistId",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "name",
-											"value": "Best album",
-											"type": "text"
-										},
-										{
-											"key": "coverImage",
-											"type": "file",
-											"src": "postman-cloud:///1eff99cb-3e57-4af0-9979-a35254501e3c"
-										},
-										{
-											"key": "description",
-											"value": "a very good description.",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{HOST}}/album/create",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"album",
-										"create"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get album by artistId",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{HOST}}/album/1",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"album",
-										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get album details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{HOST}}/album/detail/4",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"album",
-										"detail",
-										"4"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "add songs to album",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"albumId\": 1,\n    \"songIds\": [\n        \"3f54e3fb-ec40-4464-a577-c70631f92f83\",\n        \"387e5388-8555-4323-a47c-08cca44d8fda\"\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}/album/add-song",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"album",
-										"add-song"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "remove songs from album",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"albumId\": 1,\n    \"songIds\": [\n        \"3f54e3fb-ec40-4464-a577-c70631f92f83\",\n        \"387e5388-8555-4323-a47c-08cca44d8fda\"\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}/album/remove-song",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"album",
-										"remove-song"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "update album details",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"url": {
-									"raw": "{{HOST}}/album/update/1",
-									"host": [
-										"{{HOST}}"
-									],
-									"path": [
-										"album",
-										"update",
-										"1"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
 				{
 					"name": "Upload song",
 					"request": {
@@ -442,6 +215,290 @@
 							"path": [
 								"songs",
 								"artist",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "like a song",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"songId\": \"387e5388-8555-4323-a47c-08cca44d8fda\",\n    \"userId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/songs/likes",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"songs",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all user's liked songs",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/songs/likes",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"songs",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "create empty album",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "artistId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Best album",
+									"type": "text"
+								},
+								{
+									"key": "coverImage",
+									"type": "file",
+									"src": "postman-cloud:///1eff99cb-3e57-4af0-9979-a35254501e3c"
+								},
+								{
+									"key": "description",
+									"value": "a very good description.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HOST}}/album/create",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"album",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get album by artistId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/album/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"album",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get album details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/album/detail/4",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"album",
+								"detail",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add songs to album",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"albumId\": 4,\n    \"songIds\": [\n        \"3f54e3fb-ec40-4464-a577-c70631f92f83\",\n        \"387e5388-8555-4323-a47c-08cca44d8fda\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/album/add-song",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"album",
+								"add-song"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove songs from album",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"albumId\": 1,\n    \"songIds\": [\n        \"3f54e3fb-ec40-4464-a577-c70631f92f83\",\n        \"387e5388-8555-4323-a47c-08cca44d8fda\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/album/remove-song",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"album",
+								"remove-song"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update album details",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/album/update/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"album",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Genre",
+			"item": [
+				{
+					"name": "create a genre",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electric\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/songs/genres",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"songs",
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all genres",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/songs/genres",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"songs",
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get songs by genre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/songs/genres/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"songs",
+								"genres",
 								"1"
 							]
 						}
@@ -606,6 +663,156 @@
 								"user",
 								"deactivate-artist",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Playlist",
+			"item": [
+				{
+					"name": "create empty playlist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 5,\n    \"name\": \"Awesome playlist\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/playlist/create",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"playlist",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user's playlist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 5,\n    \"playlistId\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/playlist/delete",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"playlist",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add songs to playlist",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 5,\n    \"playlistId\": 4,\n    \"songIds\": [\n        \"3f54e3fb-ec40-4464-a577-c70631f92f83\",\n        \"387e5388-8555-4323-a47c-08cca44d8fda\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/playlist/add-song",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"playlist",
+								"add-song"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove songs from playlist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 5,\n    \"playlistId\": 4,\n    \"songIds\": [\n        \"387e5388-8555-4323-a47c-08cca44d8fda\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/playlist/remove-song",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"playlist",
+								"remove-song"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user's playlists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/playlist/5",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"playlist",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get playlist details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/playlist/details/4",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"playlist",
+								"details",
+								"4"
 							]
 						}
 					},
