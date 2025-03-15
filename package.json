@@ -57,6 +57,8 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "music-metadata": "^7.13.0",
+    "redis": "^4.7.0",
+    "redis-om": "^0.4.7",
     "winston": "^3.13.1",
     "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.23.8"

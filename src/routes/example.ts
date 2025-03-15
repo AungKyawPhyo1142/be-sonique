@@ -7,6 +7,7 @@ const router = Router();
 
 router.get('/', secureRoute(), exampleController.getRandom);
 router.get('/sum', exampleController.sumQuery);
+router.get('/cache', exampleController.testCache);
 router.post('/sum', exampleController.sum);
 
 export default router;

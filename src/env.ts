@@ -5,6 +5,8 @@ export const ENV = {
   JWT_SECRET: process.env.JWT_SECRET || 'temp-secret',
   NODE_ENV: (process.env.NODE_ENV || 'dev') as 'local' | 'dev' | 'production',
   PORT: process.env.PORT || 3000,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD || 'temp-redis-password',
+  REDIS_URL: process.env.REDIS_URL || 'temp-redis-url',
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'temp-secret',
   SUPABASE_KEY: process.env.SUPABASE_KEY || 'temp-supabase-key',
   SUPABASE_URL: process.env.SUPABASE_URL || 'temp-supabase-url',

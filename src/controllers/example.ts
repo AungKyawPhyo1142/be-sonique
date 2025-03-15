@@ -20,6 +20,11 @@ const getRandom = (_req: Request, res: Response) => {
   return res.status(200).json({ random });
 };
 
+const testCache = async (_req: Request, res: Response) => {
+  const data = await exampleService.testCache();
+  return res.status(200).json({ data });
+};
+
 const sumQuery = (req: Request, res: Response, next: NextFunction) => {
   try {
     const { a, b } = sumQuerySchema.parse(req.query);
@@ -48,4 +53,4 @@ const sum = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { sumQuery, sum, getRandom };
+export { sumQuery, sum, getRandom, testCache };
