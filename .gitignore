@@ -1,5 +1,7 @@
 # Production Build Directory
+/dist
 /build
+
 
 # Modules
 /node_modules
@@ -14,3 +16,5 @@
 /uploads
 /upload
 /profile-upload
+/album-upload
+.qodo

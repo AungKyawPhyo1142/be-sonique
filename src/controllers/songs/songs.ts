@@ -6,7 +6,7 @@ import { NextFunction, Request, Response } from 'express';
 import { readFileSync, unlinkSync } from 'fs';
 import multer from 'multer';
 import * as mm from 'music-metadata';
-import { ZodError, object, string } from 'zod';
+import { ZodError, number, object, string } from 'zod';
 
 const upload = multer({
   dest: 'upload/',
@@ -17,13 +17,26 @@ const upload = multer({
 
 const uploadSongSchema = object({
   artistId: string(),
-  genre: string(),
+  genreId: string(),
   title: string(),
+});
+
+const createGenreSchema = object({
+  name: string(),
+});
+
+const likeSongsSchema = object({
+  songId: string(),
+  userId: number(),
+});
+
+const getAllUserLikedSongsSchema = object({
+  userId: number(),
 });
 
 const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { artistId, genre, title } = uploadSongSchema.parse(req.body);
+    const { artistId, genreId, title } = uploadSongSchema.parse(req.body);
 
     if (
       !req.files ||
@@ -135,7 +148,7 @@ const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
       audioFileName,
       coverImageUrl.data.publicUrl,
       coverImageFileName,
-      genre,
+      genreId ? parseInt(genreId) : 0,
       title,
       audioDuration,
     );
@@ -150,4 +163,140 @@ const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { uploadSong, upload };
+const createGenre = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { name } = createGenreSchema.parse(req.body);
+    const result = await songService.createGenre(name);
+    return res.status(201).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+const getAllGenres = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await songService.getAllGenres();
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getAllSongs = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await songService.getAllSongs();
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getSongsByGenre = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { genreId } = req.params;
+    const result = await songService.getSongsByGenre(parseInt(genreId));
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const deleteSong = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { songId } = req.params;
+    const result = await songService.deleteSong(songId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getSongsByArtist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { artistId } = req.params;
+    const result = await songService.getSongsByArtist(parseInt(artistId));
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const likeSongs = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { songId, userId } = likeSongsSchema.parse(req.body);
+    const result = await songService.likeSong(songId, userId);
+    return res.status(201).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+const getAllUserLikedSongs = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = getAllUserLikedSongsSchema.parse(req.body);
+    const result = await songService.getAllUserLikedSongs(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+const getSongDetails = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { songId } = req.params;
+    const result = await songService.getSongDetails(songId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export {
+  uploadSong,
+  upload,
+  createGenre,
+  getAllSongs,
+  getSongsByGenre,
+  getAllGenres,
+  deleteSong,
+  getSongsByArtist,
+  likeSongs,
+  getAllUserLikedSongs,
+  getSongDetails,
+};

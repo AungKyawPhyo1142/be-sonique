@@ -5,7 +5,6 @@ import express, { json, urlencoded } from 'express';
 import expressListRoutes from 'express-list-routes';
 import { ENV } from './env';
 import logger from './logger';
-import errorHandler from './middlewares/error-handler';
 import jsonResponse from './middlewares/json-response';
 import networkLog from './middlewares/network-log';
 import gateway from './routes/gateway';
@@ -40,8 +39,6 @@ app.use(gateway);
 app.use((_req, _res, next) => {
   return next(new NotFoundError('Endpoint not found'));
 });
-
-app.use(errorHandler);
 
 app.listen(ENV.PORT, () => {
   logger.verbose(
