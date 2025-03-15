@@ -175,6 +175,52 @@ const getSongsByArtist = async (artistId: number) => {
   }
 };
 
+const likeSong = async (songId: string, userId: number) => {
+  try {
+    const res = await prisma.likeSong.create({
+      data: {
+        songId: songId,
+        userId: userId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error liking song', error);
+    throw error;
+  }
+};
+
+const getAllUserLikedSongs = async (userId: number) => {
+  try {
+    const res = await prisma.likeSong.findMany({
+      select: {
+        song: {
+          select: {
+            artistId: true,
+            coverImageUrl: true,
+            duration: true,
+            fileUrl: true,
+            Genre: {
+              select: {
+                id: true,
+              },
+            },
+            id: true,
+            title: true,
+          },
+        },
+      },
+      where: {
+        userId: userId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error("Error getting user's liked songs: ", error);
+    throw error;
+  }
+};
+
 export {
   uploadSong,
   createGenre,
@@ -183,4 +229,6 @@ export {
   getAllGenres,
   deleteSong,
   getSongsByArtist,
+  likeSong,
+  getAllUserLikedSongs,
 };

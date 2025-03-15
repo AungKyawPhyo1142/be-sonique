@@ -6,7 +6,7 @@ import { NextFunction, Request, Response } from 'express';
 import { readFileSync, unlinkSync } from 'fs';
 import multer from 'multer';
 import * as mm from 'music-metadata';
-import { ZodError, object, string } from 'zod';
+import { ZodError, number, object, string } from 'zod';
 
 const upload = multer({
   dest: 'upload/',
@@ -23,6 +23,15 @@ const uploadSongSchema = object({
 
 const createGenreSchema = object({
   name: string(),
+});
+
+const likeSongsSchema = object({
+  songId: string(),
+  userId: number(),
+});
+
+const getAllUserLikedSongsSchema = object({
+  userId: number(),
 });
 
 const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
@@ -232,6 +241,38 @@ const getSongsByArtist = async (
   }
 };
 
+const likeSongs = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { songId, userId } = likeSongsSchema.parse(req.body);
+    const result = await songService.likeSong(songId, userId);
+    return res.status(201).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
+const getAllUserLikedSongs = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = getAllUserLikedSongsSchema.parse(req.body);
+    const result = await songService.getAllUserLikedSongs(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
 export {
   uploadSong,
   upload,
@@ -241,4 +282,6 @@ export {
   getAllGenres,
   deleteSong,
   getSongsByArtist,
+  likeSongs,
+  getAllUserLikedSongs,
 };
