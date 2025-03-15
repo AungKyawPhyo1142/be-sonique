@@ -41,8 +41,6 @@ Before you begin, ensure you have the following installed on your machine:
 
 ## Contributors
 
-  
-
 - [Sebastian Kein (AungKyaw Phyo)](https://github.com/AungKyawPhyo1142)
 - [Nyi Nyi Soe](https://github.com/Nyi-NyiSoe)
 - [Kyi Thant Sin](https://github.com/KyiThantSin)

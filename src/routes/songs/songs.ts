@@ -19,6 +19,7 @@ router.post(
 router.post('/likes', secureRoute(), songController.likeSongs);
 router.get('/likes', secureRoute(), songController.getAllUserLikedSongs);
 router.delete('/:songId', secureRoute(), songController.deleteSong);
+router.get('/:songId', secureRoute(), songController.getSongDetails);
 
 // generes
 router.post('/genres', secureRoute(), songController.createGenre);

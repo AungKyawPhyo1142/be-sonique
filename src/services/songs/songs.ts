@@ -221,6 +221,53 @@ const getAllUserLikedSongs = async (userId: number) => {
   }
 };
 
+const getSongDetails = async (songId: string) => {
+  try {
+    const res = await prisma.song.findUnique({
+      select: {
+        artistId: true,
+        coverImageUrl: true,
+        duration: true,
+        fileUrl: true,
+        Genre: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        id: true,
+        title: true,
+        User: {
+          select: {
+            firstName: true,
+            lastName: true,
+            username: true,
+          },
+        },
+      },
+      where: {
+        id: songId,
+      },
+    });
+    return {
+      artist: {
+        id: res?.artistId,
+        name: `${res?.User?.firstName} ${res?.User?.lastName}`,
+        username: res?.User.username,
+      },
+      audioURL: res?.fileUrl,
+      coverImageURL: res?.coverImageUrl,
+      duration: res?.duration,
+      genre: res?.Genre,
+      id: res?.id,
+      title: res?.title,
+    };
+  } catch (error) {
+    logger.error('Error getting song details: ', error);
+    throw error;
+  }
+};
+
 export {
   uploadSong,
   createGenre,
@@ -231,4 +278,5 @@ export {
   getSongsByArtist,
   likeSong,
   getAllUserLikedSongs,
+  getSongDetails,
 };

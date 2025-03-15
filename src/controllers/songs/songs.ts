@@ -273,6 +273,20 @@ const getAllUserLikedSongs = async (
   }
 };
 
+const getSongDetails = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { songId } = req.params;
+    const result = await songService.getSongDetails(songId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export {
   uploadSong,
   upload,
@@ -284,4 +298,5 @@ export {
   getSongsByArtist,
   likeSongs,
   getAllUserLikedSongs,
+  getSongDetails,
 };
