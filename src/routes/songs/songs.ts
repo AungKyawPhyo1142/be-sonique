@@ -3,7 +3,6 @@ import secureRoute from '@/middlewares/secure-route';
 import { Router } from 'express';
 
 const router = Router();
-
 // songs
 router.get('/all', secureRoute(), songController.getAllSongs);
 router.get('/artist/:artistId', secureRoute(), songController.getSongsByArtist);
@@ -21,8 +20,8 @@ router.get('/likes', secureRoute(), songController.getAllUserLikedSongs);
 router.delete('/:songId', secureRoute(), songController.deleteSong);
 router.get('/:songId', secureRoute(), songController.getSongDetails);
 
-// generes
+// genres
 router.post('/genres', secureRoute(), songController.createGenre);
+router.get('/genres/all', secureRoute(), songController.getAllGenres);
 router.get('/genres/:genreId', secureRoute(), songController.getSongsByGenre);
-router.get('/genres', secureRoute(), songController.getAllGenres);
 export default router;
