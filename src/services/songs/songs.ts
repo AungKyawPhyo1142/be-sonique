@@ -66,9 +66,19 @@ const getAllGenres = async () => {
   }
 };
 
-const getAllSongs = async () => {
+const getAllSongs = async (cursor?: string, limit: number = 10) => {
   try {
     const res = await prisma.song.findMany({
+      take: limit,
+      ...(cursor && {
+        skip: 1,
+        cursor: {
+          id: cursor,
+        },
+      }),
+      orderBy: {
+        create_at: 'desc',
+      },
       select: {
         artistId: true,
         coverImageUrl: true,
@@ -83,15 +93,23 @@ const getAllSongs = async () => {
         title: true,
       },
     });
-    return res.map((song) => ({
-      artistId: song.artistId,
-      audioUrl: song.fileUrl,
-      coverImageUrl: song.coverImageUrl,
-      duration: song.duration,
-      genre: song.Genre.id,
-      id: song.id,
-      title: song.title,
-    }));
+
+    const nextCursor =
+      res.length === limit ? res[res.length - 1].id : undefined;
+
+    return {
+      songs: res.map((song) => ({
+        artistId: song.artistId,
+        audioUrl: song.fileUrl,
+        coverImageUrl: song.coverImageUrl,
+        duration: song.duration,
+        genre: song.Genre.id,
+        id: song.id,
+        title: song.title,
+      })),
+      nextCursor,
+      hasMore: res.length === limit,
+    };
   } catch (error) {
     logger.error('Error getting all songs', error);
     throw error;
