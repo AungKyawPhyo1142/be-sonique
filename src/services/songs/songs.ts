@@ -89,6 +89,13 @@ const getAllSongs = async (cursor?: string, limit: number = 10) => {
             id: true,
           },
         },
+        User: {
+          select: {
+            firstName: true,
+            lastName: true,
+            username: true,
+          },
+        },
         id: true,
         title: true,
       },
@@ -99,7 +106,11 @@ const getAllSongs = async (cursor?: string, limit: number = 10) => {
 
     return {
       songs: res.map((song) => ({
-        artistId: song.artistId,
+        artist: {
+          artistId: song.artistId,
+          name: `${song.User.firstName} ${song.User.lastName}`,
+          username: song.User.username,
+        },
         audioUrl: song.fileUrl,
         coverImageUrl: song.coverImageUrl,
         duration: song.duration,
