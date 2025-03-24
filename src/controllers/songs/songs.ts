@@ -190,13 +190,11 @@ const getAllGenres = async (
   }
 };
 
-const getAllSongs = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const getAllSongs = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await songService.getAllSongs();
+    const cursor = req.query.cursor as string | undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+    const result = await songService.getAllSongs(cursor, limit);
     return res.status(200).json(result);
   } catch (error) {
     return next(error);
