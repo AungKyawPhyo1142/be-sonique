@@ -158,9 +158,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{HOST}}/songs/genres/1",
+              "raw": "{{HOST}}/songs/songId",
               "host": ["{{HOST}}"],
-              "path": ["songs", "genres", "1"]
+              "path": ["songs", "songId"]
             }
           },
           "response": []

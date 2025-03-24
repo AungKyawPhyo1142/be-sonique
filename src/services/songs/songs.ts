@@ -81,6 +81,7 @@ const getAllSongs = async () => {
         },
         id: true,
         title: true,
+        create_at: true,
       },
     });
     return res.map((song) => ({
@@ -91,6 +92,7 @@ const getAllSongs = async () => {
       genre: song.Genre.id,
       id: song.id,
       title: song.title,
+      created_at: song.create_at,
     }));
   } catch (error) {
     logger.error('Error getting all songs', error);
@@ -163,6 +165,7 @@ const getSongsByArtist = async (artistId: number) => {
         },
         id: true,
         title: true,
+        create_at: true,
       },
       where: {
         artistId: artistId,
