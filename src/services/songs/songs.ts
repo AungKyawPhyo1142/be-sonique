@@ -1,5 +1,7 @@
+import supabase from '@/config/supabase';
 import prisma from '@/libs/prisma';
 import logger from '@/logger';
+import { BadRequestError, InternalServerError } from '@/utils/errors';
 
 const uploadSong = async (
   artistId: number,
@@ -166,11 +168,55 @@ const getSongsByGenre = async (genreId: number) => {
 
 const deleteSong = async (songId: string) => {
   try {
+    const songDb = await prisma.song.findUnique({
+      where: {
+        id: songId,
+      },
+    });
+
+    if (!songDb) {
+      throw new BadRequestError('Song not found with this id');
+    }
+
+    // delete the coverImage in Supabase
+    if (songDb.coverImage) {
+      const { error } = await supabase.storage
+        .from('songs')
+        .remove([`cover-image/${songDb.coverImage}`]);
+      if (error) {
+        logger.error('Error deleting the cover image in supabase: ', error);
+        throw new InternalServerError(
+          'Error deleting the cover image in supabase',
+        );
+      }
+    }
+
+    // delete the audio file in Supabase
+    if (songDb.fileName) {
+      const { error } = await supabase.storage
+        .from('songs')
+        .remove([`audio/${songDb.fileName}`]);
+      if (error) {
+        logger.error('Error deleting the audio file in supabase: ', error);
+        throw new InternalServerError(
+          'Error deleting the audio file in supabase',
+        );
+      }
+    }
+
     const res = await prisma.song.delete({
       where: {
         id: songId,
       },
     });
+
+    // delete all likes for this song
+    await prisma.likeSong.deleteMany({
+      where: {
+        songId: songId,
+      },
+    });
+
     return res;
   } catch (error) {
     logger.error('Error deleting song', error);
