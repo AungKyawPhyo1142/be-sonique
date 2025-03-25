@@ -104,6 +104,18 @@ const updateUser = async (
         );
       }
 
+      // Delete the existing profile image from Supabase storage after uploading the new one
+      const { error: deleteError } = await supabase.storage
+        .from('users')
+        .remove([`profile-images/${existingUser.profile_image}`]);
+
+      if (deleteError) {
+        logger.error('Profile image delete error: ', deleteError);
+        throw new InternalServerError(
+          `Error deleting profile image: ${deleteError.message}`,
+        );
+      }
+
       const {
         data: { publicUrl },
       } = supabase.storage
