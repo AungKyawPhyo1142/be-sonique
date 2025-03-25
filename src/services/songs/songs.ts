@@ -98,6 +98,7 @@ const getAllSongs = async (cursor?: string, limit: number = 10) => {
         },
         id: true,
         title: true,
+        create_at: true,
       },
     });
 
@@ -117,6 +118,7 @@ const getAllSongs = async (cursor?: string, limit: number = 10) => {
         genre: song.Genre.id,
         id: song.id,
         title: song.title,
+        created_at: song.create_at,
       })),
       nextCursor,
       hasMore: res.length === limit,
@@ -192,6 +194,7 @@ const getSongsByArtist = async (artistId: number) => {
         },
         id: true,
         title: true,
+        create_at: true,
       },
       where: {
         artistId: artistId,
