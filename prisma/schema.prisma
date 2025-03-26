@@ -90,6 +90,7 @@ model PlaylistSong {
     id         Int       @id @default(autoincrement())
     playlistId Int
     songId     String
+    order      Int // New field to track the order of songs
     created_at DateTime  @default(now())
     updated_at DateTime  @updatedAt
     deleted_at DateTime?
