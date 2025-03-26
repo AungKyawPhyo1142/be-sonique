@@ -34,6 +34,12 @@ const getAllUserLikedSongsSchema = object({
   userId: number(),
 });
 
+export const getAllSongsQuerySchema = object({
+  cursor: string().optional(),
+  limit: string().optional(),
+  search: string().optional(),
+});
+
 const uploadSong = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { artistId, genreId, title } = uploadSongSchema.parse(req.body);
@@ -192,9 +198,12 @@ const getAllGenres = async (
 
 const getAllSongs = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const cursor = req.query.cursor as string | undefined;
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
-    const result = await songService.getAllSongs(cursor, limit);
+    // const cursor = req.query.cursor as string | undefined;
+    // const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
+    const { cursor, limit, search } = getAllSongsQuerySchema.parse(req.query);
+    const paramLimit = limit ? parseInt(limit) : undefined;
+    const result = await songService.getAllSongs(cursor, paramLimit, search);
     return res.status(200).json(result);
   } catch (error) {
     return next(error);
