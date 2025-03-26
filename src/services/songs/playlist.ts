@@ -78,10 +78,17 @@ const addSongsToPlaylist = async (
       throw new NotFoundError('Playlist not found!');
     }
 
-    const createPromises = songIds.map((songId) =>
+    const existingSongsCount = await prisma.playlistSong.count({
+      where: {
+        playlistId: playlistId,
+      },
+    });
+
+    const createPromises = songIds.map((songId, index) =>
       prisma.playlistSong
         .create({
           data: {
+            order: existingSongsCount + index + 1, // Assign order based on existing count
             playlistId: playlistId,
             songId: songId,
           },
@@ -121,8 +128,10 @@ const getPlaylistDetails = async (playlistId: number) => {
         created_at: true,
         id: true,
         name: true,
+
         songs: {
           select: {
+            order: true,
             song: {
               select: {
                 artistId: true,
@@ -161,6 +170,7 @@ const getPlaylistDetails = async (playlistId: number) => {
           duration: item.song.duration,
           fileUrl: item.song.fileUrl,
           id: item.song.id,
+          order: item.order,
           title: item.song.title,
         })) || [],
     };
@@ -232,6 +242,44 @@ const deletePlaylist = async (playlistId: number, userId: number) => {
   }
 };
 
+const reorderPlaylistSongs = async (
+  playlistId: number,
+  orderedSongIds: string[],
+  userId: number,
+) => {
+  try {
+    const playlist = await prisma.playlist.findFirst({
+      where: {
+        id: playlistId,
+        userId: userId,
+      },
+    });
+
+    if (!playlist) {
+      throw new NotFoundError('Playlist not found!');
+    }
+
+    const updatePromises = orderedSongIds.map((songId, index) =>
+      prisma.playlistSong.updateMany({
+        data: {
+          order: index + 1, // Assign order based on the index
+        },
+        where: {
+          playlistId: playlistId,
+          songId: songId,
+        },
+      }),
+    );
+
+    await Promise.all(updatePromises);
+
+    return await getPlaylistDetails(playlistId);
+  } catch (error) {
+    logger.error('Error reordering playlist songs: ', error);
+    throw error;
+  }
+};
+
 export {
   createPlaylist,
   getUserPlaylist,
@@ -239,4 +287,5 @@ export {
   removeSongsFromPlaylist,
   getPlaylistDetails,
   deletePlaylist,
+  reorderPlaylistSongs,
 };
