@@ -74,136 +74,67 @@ const getAllSongs = async (
   search?: string,
 ) => {
   try {
-    const res = await prisma.song.findMany({
-      // prisma.song.count({
-      //   where: {
-      //     ...(search && {
-      //       OR: [
-      //         {
-      //           title: {
-      //             contains: search,
-      //             mode: 'insensitive',
-      //           },
-      //         },
-      //         {
-      //           User: {
-      //             OR: [
-      //               {
-      //                 firstName: {
-      //                   contains: search,
-      //                   mode: 'insensitive',
-      //                 },
-      //               },
-      //               {
-      //                 lastName: {
-      //                   contains: search,
-      //                   mode: 'insensitive',
-      //                 },
-      //               },
-      //               {
-      //                 username: {
-      //                   contains: search,
-      //                   mode: 'insensitive',
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //         },
-      //         {
-      //           Genre: {
-      //             name: {
-      //               contains: search,
-      //               mode: 'insensitive',
-      //             },
-      //           },
-      //         },
-      //       ],
-      //     }),
-      //   },
-      // }),
-
-      take: limit || 10,
-      ...(cursor && {
-        cursor: {
-          id: cursor,
+    const [_, res] = await prisma.$transaction([
+      prisma.song.count({
+        where: {
+          ...(search && {
+            title: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          }),
         },
-        skip: 1,
       }),
-      orderBy: {
-        create_at: 'desc',
-      },
-      select: {
-        artistId: true,
-        coverImageUrl: true,
-        create_at: true,
-        duration: true,
-        fileUrl: true,
-        Genre: {
-          select: {
-            id: true,
-            name: true,
+
+      prisma.song.findMany({
+        take: limit || 10,
+        ...(cursor && {
+          cursor: {
+            id: cursor,
           },
-        },
-        id: true,
-        title: true,
-        User: {
-          select: {
-            firstName: true,
-            lastName: true,
-            username: true,
-          },
-        },
-      },
-      where: {
-        ...(search && {
-          OR: [
-            {
-              title: {
-                contains: search,
-                mode: 'insensitive',
-              },
-            },
-            {
-              User: {
-                OR: [
-                  {
-                    firstName: {
-                      contains: search,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    lastName: {
-                      contains: search,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    username: {
-                      contains: search,
-                      mode: 'insensitive',
-                    },
-                  },
-                ],
-              },
-            },
-            {
-              Genre: {
-                name: {
-                  contains: search,
-                  mode: 'insensitive',
-                },
-              },
-            },
-          ],
+          skip: 1,
         }),
-      },
-    });
+        orderBy: {
+          create_at: 'desc',
+        },
+        select: {
+          artistId: true,
+          coverImageUrl: true,
+          create_at: true,
+          duration: true,
+          fileUrl: true,
+          Genre: {
+            select: {
+              id: true,
+            },
+          },
+          id: true,
+          title: true,
+          User: {
+            select: {
+              firstName: true,
+              lastName: true,
+              username: true,
+            },
+          },
+        },
+        where: {
+          ...(search && {
+            title: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          }),
+        },
+      }),
+    ]);
 
     const nextCursor =
       res.length === limit ? res[res.length - 1].id : undefined;
 
     return {
+      hasMore: res.length === limit,
+      nextCursor,
       songs: res.map((song) => ({
         artist: {
           artistId: song.artistId,
@@ -214,13 +145,9 @@ const getAllSongs = async (
         coverImageUrl: song.coverImageUrl,
         created_at: song.create_at,
         duration: song.duration,
-        genre: {
-          id: song.Genre.id,
-          name: song.Genre.name,
-        },
-        hasMore: res.length === limit,
+        genre: song.Genre.id,
+
         id: song.id,
-        nextCursor,
         title: song.title,
       })),
     };
@@ -418,6 +345,7 @@ const getSongDetails = async (songId: string) => {
           select: {
             firstName: true,
             lastName: true,
+            profile_image: true,
             username: true,
           },
         },
@@ -430,6 +358,7 @@ const getSongDetails = async (songId: string) => {
       artist: {
         id: res?.artistId,
         name: `${res?.User?.firstName} ${res?.User?.lastName}`,
+        profile_image: res?.User.profile_image,
         username: res?.User.username,
       },
       audioURL: res?.fileUrl,
