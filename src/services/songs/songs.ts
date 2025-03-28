@@ -68,15 +68,66 @@ const getAllGenres = async () => {
   }
 };
 
-const getAllSongs = async (cursor?: string, limit: number = 10) => {
+const getAllSongs = async (
+  cursor?: string,
+  limit?: number,
+  search?: string,
+) => {
   try {
     const res = await prisma.song.findMany({
-      take: limit,
+      // prisma.song.count({
+      //   where: {
+      //     ...(search && {
+      //       OR: [
+      //         {
+      //           title: {
+      //             contains: search,
+      //             mode: 'insensitive',
+      //           },
+      //         },
+      //         {
+      //           User: {
+      //             OR: [
+      //               {
+      //                 firstName: {
+      //                   contains: search,
+      //                   mode: 'insensitive',
+      //                 },
+      //               },
+      //               {
+      //                 lastName: {
+      //                   contains: search,
+      //                   mode: 'insensitive',
+      //                 },
+      //               },
+      //               {
+      //                 username: {
+      //                   contains: search,
+      //                   mode: 'insensitive',
+      //                 },
+      //               },
+      //             ],
+      //           },
+      //         },
+      //         {
+      //           Genre: {
+      //             name: {
+      //               contains: search,
+      //               mode: 'insensitive',
+      //             },
+      //           },
+      //         },
+      //       ],
+      //     }),
+      //   },
+      // }),
+
+      take: limit || 10,
       ...(cursor && {
-        skip: 1,
         cursor: {
           id: cursor,
         },
+        skip: 1,
       }),
       orderBy: {
         create_at: 'desc',
@@ -84,13 +135,17 @@ const getAllSongs = async (cursor?: string, limit: number = 10) => {
       select: {
         artistId: true,
         coverImageUrl: true,
+        create_at: true,
         duration: true,
         fileUrl: true,
         Genre: {
           select: {
             id: true,
+            name: true,
           },
         },
+        id: true,
+        title: true,
         User: {
           select: {
             firstName: true,
@@ -98,9 +153,50 @@ const getAllSongs = async (cursor?: string, limit: number = 10) => {
             username: true,
           },
         },
-        id: true,
-        title: true,
-        create_at: true,
+      },
+      where: {
+        ...(search && {
+          OR: [
+            {
+              title: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              User: {
+                OR: [
+                  {
+                    firstName: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    lastName: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    username: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              Genre: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          ],
+        }),
       },
     });
 
@@ -116,14 +212,17 @@ const getAllSongs = async (cursor?: string, limit: number = 10) => {
         },
         audioUrl: song.fileUrl,
         coverImageUrl: song.coverImageUrl,
-        duration: song.duration,
-        genre: song.Genre.id,
-        id: song.id,
-        title: song.title,
         created_at: song.create_at,
+        duration: song.duration,
+        genre: {
+          id: song.Genre.id,
+          name: song.Genre.name,
+        },
+        hasMore: res.length === limit,
+        id: song.id,
+        nextCursor,
+        title: song.title,
       })),
-      nextCursor,
-      hasMore: res.length === limit,
     };
   } catch (error) {
     logger.error('Error getting all songs', error);
@@ -231,6 +330,7 @@ const getSongsByArtist = async (artistId: number) => {
         albumId: true,
         artistId: true,
         coverImageUrl: true,
+        create_at: true,
         duration: true,
         fileUrl: true,
         Genre: {
@@ -240,7 +340,6 @@ const getSongsByArtist = async (artistId: number) => {
         },
         id: true,
         title: true,
-        create_at: true,
       },
       where: {
         artistId: artistId,

@@ -109,12 +109,12 @@
 								{
 									"key": "audio",
 									"type": "file",
-									"src": "postman-cloud:///1eff9e5d-8459-4300-9ad7-1a7f6a685a9d"
+									"src": "/Users/khamaye/Downloads/Kendrick Lamar Peekaboo Official Audio.mp3"
 								},
 								{
 									"key": "coverImage",
 									"type": "file",
-									"src": "/Users/khamaye/Downloads/blue.jpeg"
+									"src": "/Users/khamaye/Downloads/kendrick.jpeg"
 								},
 								{
 									"key": "artistId",
@@ -128,7 +128,7 @@
 								},
 								{
 									"key": "title",
-									"value": "Blue",
+									"value": "Peekaboo",
 									"type": "text"
 								}
 							]
@@ -152,7 +152,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{HOST}}/songs/all?limit=10",
+							"raw": "{{HOST}}/songs/all?limit=10&search=pop",
 							"host": [
 								"{{HOST}}"
 							],
@@ -169,6 +169,10 @@
 								{
 									"key": "limit",
 									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": "pop"
 								}
 							]
 						}
@@ -721,7 +725,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": 5,\n    \"name\": \"Awesome playlist\"\n}",
+							"raw": "{\n    \"userId\": 1,\n    \"name\": \"Awesome playlist\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -775,7 +779,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": 5,\n    \"playlistId\": 4,\n    \"songIds\": [\n        \"3f54e3fb-ec40-4464-a577-c70631f92f83\",\n        \"387e5388-8555-4323-a47c-08cca44d8fda\"\n    ]\n}",
+							"raw": "{\n    \"userId\": 1,\n    \"playlistId\": 1,\n    \"songIds\": [\n        \"e02aac1a-717c-4549-ae58-15df61e8b04e\",\n        \"fa860c2f-0896-4885-8297-089431c69e74\"\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -846,14 +850,41 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{HOST}}/playlist/details/4",
+							"raw": "{{HOST}}/playlist/details/1",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"playlist",
 								"details",
-								"4"
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reorder the songs",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"playlistId\": 1,\n    \"userId\": 1,\n    \"songIds\": [\n        \n        \"fa860c2f-0896-4885-8297-089431c69e74\",\n        \"e02aac1a-717c-4549-ae58-15df61e8b04e\"\n        \n        \n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/playlist/reorder",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"playlist",
+								"reorder"
 							]
 						}
 					},

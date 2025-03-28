@@ -25,6 +25,12 @@ const deletePlaylistSchema = object({
   userId: number(),
 });
 
+const reorderPlaylistSchema = object({
+  playlistId: number(),
+  songIds: array(string()),
+  userId: number(),
+});
+
 const createPlaylist = async (
   req: Request,
   res: Response,
@@ -133,6 +139,30 @@ const deletePlaylist = async (
   }
 };
 
+const reorderPlaylist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { playlistId, userId, songIds } = reorderPlaylistSchema.parse(
+      req.body,
+    );
+    const response = await songServices.reorderPlaylistSongs(
+      playlistId,
+      songIds,
+      userId,
+    );
+    return res.status(200).json(response);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
 export {
   createPlaylist,
   getUserPlaylist,
@@ -140,4 +170,5 @@ export {
   removeSongsFromPlaylist,
   getPlaylistDetails,
   deletePlaylist,
+  reorderPlaylist,
 };
