@@ -4,16 +4,47 @@ import { ConflictError, NotFoundError } from '@/utils/errors';
 
 const createPlaylist = async (userId: number, name: string) => {
   try {
+    let playlistName = name.trim() || 'untitled';
+
+    const lastUntitledPlaylist = await prisma.playlist.findFirst({
+      orderBy: {
+        name: 'desc',
+      },
+      select: {
+        name: true,
+      },
+      where: {
+        name: {
+          mode: 'insensitive',
+          startsWith: 'untitled',
+        },
+        userId: userId,
+      },
+    });
+
+    if (playlistName.toLowerCase() === 'untitled') {
+      const extractNumber = (name: string) => {
+        const match = name.match(/untitled-?(\d+)$/i);
+        return match ? parseInt(match[1], 10) : 0;
+      };
+      const nextNumber = lastUntitledPlaylist
+        ? extractNumber(lastUntitledPlaylist.name) + 1
+        : 1;
+
+      playlistName = `untitled-${nextNumber}`;
+    }
+
     const existingPlaylist = await prisma.playlist.findFirst({
       select: {
         name: true,
       },
       where: {
-        name: name,
+        name: playlistName,
         userId: userId,
       },
     });
-    if (existingPlaylist) {
+
+    if (existingPlaylist && existingPlaylist.name === playlistName) {
       throw new ConflictError('Playlist with the same name already exists.');
     }
 
@@ -26,6 +57,35 @@ const createPlaylist = async (userId: number, name: string) => {
     return result;
   } catch (error) {
     logger.error('Error creating a playlist: ', error);
+    throw error;
+  }
+};
+
+const updatePlaylistName = async (playlistId: number, userId: number) => {
+  try {
+    const existingPlaylist = await prisma.playlist.findFirst({
+      where: {
+        id: playlistId,
+        userId: userId,
+      },
+    });
+
+    if (!existingPlaylist) {
+      throw new NotFoundError('Playlist not found!');
+    }
+
+    const updatedPlaylist = await prisma.playlist.update({
+      data: {
+        name: existingPlaylist.name,
+      },
+      where: {
+        id: playlistId,
+      },
+    });
+
+    return updatedPlaylist;
+  } catch (error) {
+    logger.error('Error updating playlist name: ', error);
     throw error;
   }
 };
@@ -128,8 +188,10 @@ const getPlaylistDetails = async (playlistId: number) => {
         created_at: true,
         id: true,
         name: true,
-
         songs: {
+          orderBy: {
+            created_at: 'asc',
+          },
           select: {
             order: true,
             song: {
@@ -160,6 +222,7 @@ const getPlaylistDetails = async (playlistId: number) => {
       created_at: result?.created_at,
       id: result?.id,
       name: result?.name,
+      playlist_coverImageUrl: result?.songs[0]?.song.coverImageUrl,
       songs:
         result?.songs.map((item) => ({
           artist: {
@@ -288,4 +351,5 @@ export {
   getPlaylistDetails,
   deletePlaylist,
   reorderPlaylistSongs,
+  updatePlaylistName,
 };
