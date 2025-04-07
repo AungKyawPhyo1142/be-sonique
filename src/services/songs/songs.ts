@@ -120,10 +120,15 @@ const getAllSongs = async (
         },
         where: {
           ...(search && {
-            title: {
-              contains: search,
-              mode: 'insensitive',
-            },
+            OR: [
+              { title: { contains: search, mode: 'insensitive' } },
+              { Genre: { name: { contains: search, mode: 'insensitive' } } },
+              {
+                User: { firstName: { contains: search, mode: 'insensitive' } },
+              },
+              { User: { lastName: { contains: search, mode: 'insensitive' } } },
+              { User: { username: { contains: search, mode: 'insensitive' } } },
+            ],
           }),
         },
       }),
