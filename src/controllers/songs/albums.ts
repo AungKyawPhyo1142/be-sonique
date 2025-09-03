@@ -118,6 +118,15 @@ const getAlbumsByArtistId = async (
   }
 };
 
+const getAlbums = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const response = await albumService.getAlbums();
+    return res.status(200).json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const getAlbumDetails = async (
   req: Request,
   res: Response,
@@ -214,11 +223,7 @@ const updateAlbum = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export {
-  createAlbum,
-  upload,
-  getAlbumsByArtistId,
-  getAlbumDetails,
-  addSongsToAlbum,
-  removeSongsFromAlbum,
-  updateAlbum,
+  addSongsToAlbum, createAlbum, getAlbumDetails, getAlbums, getAlbumsByArtistId, removeSongsFromAlbum,
+  updateAlbum, upload
 };
+
