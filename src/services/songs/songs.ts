@@ -317,7 +317,9 @@ const getAllUserLikedSongs = async (userId: number) => {
             id: true,
             title: true,
           },
-         
+         include: {
+          User: true
+         }
         },
       },
       where: {
@@ -326,7 +328,11 @@ const getAllUserLikedSongs = async (userId: number) => {
 
     });
     return res.map((likedSong) => ({
-      
+      artist: {
+        artistId: likedSong.song.artistId,
+        name: `${likedSong.song.User.firstName} ${likedSong.song.User.lastName}`,
+        username: likedSong.song.User.username,
+      },
       ...likedSong.song,
     }));
   } catch (error) {
