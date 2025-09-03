@@ -317,13 +317,18 @@ const getAllUserLikedSongs = async (userId: number) => {
             id: true,
             title: true,
           },
+         
         },
       },
       where: {
         userId: userId,
       },
+
     });
-    return res;
+    return res.map((likedSong) => ({
+      
+      ...likedSong.song,
+    }));
   } catch (error) {
     logger.error("Error getting user's liked songs: ", error);
     throw error;
