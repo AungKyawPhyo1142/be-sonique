@@ -316,16 +316,19 @@ const getAllUserLikedSongs = async (userId: number) => {
             },
             id: true,
             title: true,
+            User: {
+              select: {
+                firstName: true,
+                lastName: true,
+                username: true,
+              },
+            },
           },
-         include: {
-          User: true
-         }
         },
       },
       where: {
         userId: userId,
       },
-
     });
     return res.map((likedSong) => ({
       artist: {
