@@ -30,9 +30,6 @@ const likeSongsSchema = object({
   userId: number(),
 });
 
-const getAllUserLikedSongsSchema = object({
-  userId: number(),
-});
 
 export const getAllSongsQuerySchema = object({
   cursor: string().optional(),
@@ -268,7 +265,10 @@ const getAllUserLikedSongs = async (
   next: NextFunction,
 ) => {
   try {
-    const { userId } = getAllUserLikedSongsSchema.parse(req.body);
+    const userId = req.user?.id
+    if (!userId) {
+      return res.status(400).json({ error: 'No userId provided' });
+    }
     const result = await songService.getAllUserLikedSongs(userId);
     return res.status(200).json(result);
   } catch (error) {
