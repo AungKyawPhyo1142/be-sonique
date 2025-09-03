@@ -36,6 +36,26 @@ const createAlbum = async (
   }
 };
 
+const getAlbums = async () => {
+  try {
+    const res = await prisma.album.findMany({
+      select: {
+        artistId: true,
+        coverImageUrl: true,
+        created_at: true,
+        description: true,
+        id: true,
+        name: true,
+        updated_at: true,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error getting albums ', error);
+    throw error;
+  }
+};
+
 const getAlbumsByArtistId = async (artistId: number) => {
   try {
     const res = await prisma.album.findMany({
@@ -214,10 +234,7 @@ const updateAlbum = async (
 };
 
 export {
-  createAlbum,
-  getAlbumsByArtistId,
-  getAlbumDetails,
-  addSongsToAlbum,
-  removeSongsFromAlbum,
-  updateAlbum,
+  addSongsToAlbum, createAlbum, getAlbumDetails, getAlbums, getAlbumsByArtistId, removeSongsFromAlbum,
+  updateAlbum
 };
+
