@@ -86,8 +86,8 @@ const createAlbum = async (req: Request, res: Response, next: NextFunction) => {
 
     const response = await albumService.createAlbum(
       artistId ? parseInt(artistId) : 0,
-      coverImageFileName,
       coverImageUrl.data.publicUrl,
+      coverImageFileName,
       name,
       description,
     );
