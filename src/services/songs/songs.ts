@@ -299,6 +299,21 @@ const likeSong = async (songId: string, userId: number) => {
   }
 };
 
+const unlikeSong = async (songId: string, userId: number) => {
+  try {
+    const res = await prisma.likeSong.deleteMany({
+      where: {
+        songId: songId,
+        userId: userId,
+      },
+    });
+    return res;
+  } catch (error) {
+    logger.error('Error unliking song', error);
+    throw error;
+  }
+};
+
 const getAllUserLikedSongs = async (userId: number) => {
   try {
     const res = await prisma.likeSong.findMany({
@@ -402,6 +417,7 @@ export {
   deleteSong,
   getSongsByArtist,
   likeSong,
+  unlikeSong,
   getAllUserLikedSongs,
   getSongDetails,
 };

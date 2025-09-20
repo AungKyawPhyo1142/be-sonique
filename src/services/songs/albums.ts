@@ -234,7 +234,11 @@ const updateAlbum = async (
 };
 
 export {
-  addSongsToAlbum, createAlbum, getAlbumDetails, getAlbums, getAlbumsByArtistId, removeSongsFromAlbum,
-  updateAlbum
+  addSongsToAlbum,
+  createAlbum,
+  getAlbumDetails,
+  getAlbums,
+  getAlbumsByArtistId,
+  removeSongsFromAlbum,
+  updateAlbum,
 };
-

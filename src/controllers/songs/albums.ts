@@ -223,7 +223,12 @@ const updateAlbum = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export {
-  addSongsToAlbum, createAlbum, getAlbumDetails, getAlbums, getAlbumsByArtistId, removeSongsFromAlbum,
-  updateAlbum, upload
+  addSongsToAlbum,
+  createAlbum,
+  getAlbumDetails,
+  getAlbums,
+  getAlbumsByArtistId,
+  removeSongsFromAlbum,
+  updateAlbum,
+  upload,
 };
-

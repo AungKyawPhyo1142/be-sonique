@@ -30,6 +30,10 @@ const likeSongsSchema = object({
   userId: number(),
 });
 
+const unlikeSongsSchema = object({
+  songId: string(),
+  userId: number(),
+});
 
 export const getAllSongsQuerySchema = object({
   cursor: string().optional(),
@@ -259,13 +263,27 @@ const likeSongs = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const unlikeSongs = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { songId, userId } = unlikeSongsSchema.parse(req.body);
+    const result = await songService.unlikeSong(songId, userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return next(new ValidationError(error.issues));
+    } else {
+      return next(error);
+    }
+  }
+};
+
 const getAllUserLikedSongs = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id
+    const userId = req.user?.id;
     if (!userId) {
       return res.status(400).json({ error: 'No userId provided' });
     }
@@ -304,6 +322,7 @@ export {
   deleteSong,
   getSongsByArtist,
   likeSongs,
+  unlikeSongs,
   getAllUserLikedSongs,
   getSongDetails,
 };

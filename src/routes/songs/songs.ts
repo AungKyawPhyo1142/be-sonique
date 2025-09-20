@@ -18,8 +18,8 @@ router.post(
   songController.uploadSong,
 );
 
-
 router.post('/likes', secureRoute(), songController.likeSongs);
+router.delete('/likes', secureRoute(), songController.unlikeSongs);
 router.delete('/:songId', secureRoute(), songController.deleteSong);
 
 // genres
