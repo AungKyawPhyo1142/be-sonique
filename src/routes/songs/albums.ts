@@ -26,5 +26,6 @@ router.delete(
   secureRoute(),
   albumController.removeSongsFromAlbum,
 );
+router.delete('/delete/:albumId', secureRoute(), albumController.deleteAlbum);
 
 export default router;

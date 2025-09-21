@@ -115,6 +115,22 @@ const deactivateArtist = async (
   }
 };
 
+const getAllArtists = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { cursor, limit, search } = req.query;
+    const paramLimit = limit ? parseInt(limit as string) : undefined;
+    const result = await userService.getAllArtists(cursor as string, paramLimit, search as string);
+    return res.status(200).json(result);
+
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export {
   getUserDetails,
   deleteUser,
@@ -122,4 +138,5 @@ export {
   profileUpload,
   activateArtist,
   deactivateArtist,
+  getAllArtists
 };

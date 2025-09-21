@@ -222,6 +222,19 @@ const updateAlbum = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const deleteAlbum = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { albumId } = req.params;
+    if (!albumId) return res.status(400).json({ error: 'No albumId provided' });
+    const response = await albumService.deleteAlbum(
+      albumId ? parseInt(albumId) : 0,
+    );
+    return res.status(200).json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export {
   addSongsToAlbum,
   createAlbum,
@@ -231,4 +244,5 @@ export {
   removeSongsFromAlbum,
   updateAlbum,
   upload,
+  deleteAlbum
 };

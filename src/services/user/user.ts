@@ -221,10 +221,93 @@ const deactivateArtist = async (id: string) => {
   }
 };
 
+const getAllArtists = async (
+  cursor?: string,
+  limit?: number,
+  search?: string,
+) => {
+  try {
+    const take = limit || 10;
+    
+
+    const [_, artists] = await prisma.$transaction([
+      prisma.user.count({
+        where: {
+          deleted_at: null,
+          isArtist: true,
+          ...(search && {
+            OR: [
+              { firstName: { contains: search, mode: 'insensitive' } },
+              { lastName: { contains: search, mode: 'insensitive' } },
+              { username: { contains: search, mode: 'insensitive' } },
+            ],
+          }),
+        },
+      }),
+      prisma.user.findMany({
+        take,
+        ...(cursor && {
+          cursor: {
+            id: parseInt(cursor, 10),
+          },
+          skip: 1,
+        }),
+        orderBy: {
+          created_at: 'desc',
+        },
+        select: {
+          _count: {
+            select: {
+              Song: true,
+            },
+          },
+          bio: true,
+          firstName: true,
+          id: true,
+          lastName: true,
+          profile_image: true,
+          username: true,
+        },
+        where: {
+          deleted_at: null,
+          isArtist: true,
+          ...(search && {
+            OR: [
+              { firstName: { contains: search, mode: 'insensitive' } },
+              { lastName: { contains: search, mode: 'insensitive' } },
+              { username: { contains: search, mode: 'insensitive' } },
+            ],
+          }),
+        },
+      }),
+    ]);
+
+    const nextCursor =
+      artists.length === take ? artists[artists.length - 1].id.toString() : undefined;
+
+    return {
+      artists: artists.map((artist) => ({
+        bio: artist.bio,
+        id: artist.id,
+        name: `${artist.firstName} ${artist.lastName}`,
+        profile_image: artist.profile_image,
+        total_songs: artist._count.Song,
+        username: artist.username,
+      })),
+      hasMore: artists.length === take,
+      nextCursor,
+    };
+  } catch (error) {
+    logger.error('Error getting all artists: ', error);
+    throw error;
+  }
+};
+
 export {
   getUserDetails,
   deleteUser,
   updateUser,
   activateArtist,
   deactivateArtist,
+  getAllArtists,
 };

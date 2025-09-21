@@ -233,6 +233,61 @@ const updateAlbum = async (
   }
 };
 
+const deleteAlbum = async (albumId: number) => {
+  if (!albumId) {
+    throw new BadRequestError('Album id is required');
+  }
+
+  try {
+    const existingAlbum = await prisma.album.findUnique({
+      where: {
+        deleted_at: null,
+        id: albumId,
+      },
+    });
+
+    if (!existingAlbum) {
+      throw new BadRequestError('Album not found');
+    }
+
+    // delete the coverImage in Supabase
+    if (existingAlbum.coverImage) {
+      const { error } = await supabase.storage
+        .from('albums')
+        .remove([`cover-image/${existingAlbum.coverImage}`]);
+      if (error) {
+        logger.error('Error deleting the cover image in supabase: ', error);
+        throw new InternalServerError(
+          'Error deleting the cover image in supabase',
+        );
+      }
+    }
+
+    // disconnect all songs from this album
+    await prisma.album.update({
+      data: {
+        songs: {
+          set: [],
+        },
+      },
+      where: {
+        id: albumId,
+      },
+    });
+
+    const res = await prisma.album.delete({
+      where: {
+        id: albumId,
+      },
+    });
+
+    return res;
+  } catch (error) {
+    logger.error('Error deleting album', error);
+    throw error;
+  }
+}
+
 export {
   addSongsToAlbum,
   createAlbum,
@@ -241,4 +296,5 @@ export {
   getAlbumsByArtistId,
   removeSongsFromAlbum,
   updateAlbum,
+  deleteAlbum,
 };

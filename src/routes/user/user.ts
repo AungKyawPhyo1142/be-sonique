@@ -4,6 +4,7 @@ import { Router } from 'express';
 
 const router = Router();
 
+router.get('/', secureRoute(), userController.getAllArtists);
 router.get('/:id', secureRoute(), userController.getUserDetails);
 router.delete('/:id', secureRoute(), userController.deleteUser);
 router.patch(
