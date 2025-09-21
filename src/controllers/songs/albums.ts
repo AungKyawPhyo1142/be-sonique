@@ -244,5 +244,5 @@ export {
   removeSongsFromAlbum,
   updateAlbum,
   upload,
-  deleteAlbum
+  deleteAlbum,
 };

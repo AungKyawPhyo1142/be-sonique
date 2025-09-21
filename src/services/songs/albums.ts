@@ -286,7 +286,7 @@ const deleteAlbum = async (albumId: number) => {
     logger.error('Error deleting album', error);
     throw error;
   }
-}
+};
 
 export {
   addSongsToAlbum,

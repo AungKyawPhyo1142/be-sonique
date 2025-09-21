@@ -228,7 +228,6 @@ const getAllArtists = async (
 ) => {
   try {
     const take = limit || 10;
-    
 
     const [_, artists] = await prisma.$transaction([
       prisma.user.count({
@@ -283,7 +282,9 @@ const getAllArtists = async (
     ]);
 
     const nextCursor =
-      artists.length === take ? artists[artists.length - 1].id.toString() : undefined;
+      artists.length === take
+        ? artists[artists.length - 1].id.toString()
+        : undefined;
 
     return {
       artists: artists.map((artist) => ({
